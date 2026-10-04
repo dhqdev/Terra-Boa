@@ -19,10 +19,13 @@ cartucho de 16 bits feito com carinho no interior de Minas.
 | Quero mexer em... | Arquivo |
 |---|---|
 | Preço, cultura, receita, morador, fala, notícia, objetivo | `js/data.js` |
-| Desenho de qualquer coisa | `js/sprites.js` |
+| Terreno, objetos, árvores, plantas, construções | `js/sprites.js` |
+| Pessoas, retratos, bichos, monstros, ícones | `js/chars.js` |
+| Gruta (andares, combate, bombas) | `js/mine.js` |
+| Pescaria e minijogo | `js/fishing.js` |
 | Mapa, construção, colisão | `js/world.js` |
-| Regra, virada do dia, mercado, salvar | `js/game.js` |
-| Menu, diálogo, loja, mochila | `js/ui.js` |
+| Regra, habilidades, ferramentas, criação, correio, virada do dia, salvar | `js/game.js` |
+| Menu em abas, diálogo com retrato, baú, correio, ferraria, lojas | `js/ui.js` |
 | Feira de sábado | `js/feira.js` |
 | Título, intro, jogo, HUD | `js/scenes.js` |
 | Música e efeitos | `js/audio.js` |
@@ -34,11 +37,15 @@ Scripts clássicos carregados em ordem no `index.html`, tudo pendurado em `windo
 - **Resolução 384×216, tile 16 px, coordenadas inteiras.** Mundo no buffer baixo; texto no canvas de UI.
 - **Paleta curta e quente.** Reaproveite `SE.PAL[epoca]`, `SE.shade` e as cores já usadas. Contorno escuro `#3a2412`, papel `#f4e4bc`, destaque `#f2c94c`, alerta `#c0392b`.
 - **Toda arte nova vem em duas épocas** (águas verde intenso, seca amarelada e céu bem azul) e funciona de noite.
+- **Todo sprite tem contorno** (`SE.outline`, que devolve canvas 2 px maior com `ox`/`oy`) e é desenhado com `SE.blit`. Sombra no chão é separada (`SE.shadow`), desenhada antes de todos os sprites.
+- **Pessoas são 16×32** (`SE.drawPerson` com o pé como âncora); árvores 48×64; retrato de diálogo por `SE.portraitSprite(look, emo)`.
+- **Visual no jeito dos clássicos de fazenda, mas tudo original**: nunca copie sprite, som ou texto de outro jogo.
 - **Ícone 16×16 para todo item** (`icon: [tipo, cor...]` em `data.js`).
 - **Textos em português do Brasil**, tom acolhedor, sem caricatura, e **neutros quanto ao gênero do jogador** ("Sem energia", nunca "cansado/cansada").
 - Fonte de título (Press Start 2P) só em **caixa mista** ("Feira de sábado"): maiúsculas acentuadas ficam feias nela.
 - Toda tela nova funciona com **teclado, mouse e toque** (use `ui.btn`/`SE.addHit` e `SE.input.take`).
-- Mudou o formato do save? Incremente `v` e migre o save antigo em `SE.loadGame`.
+- Mudou o formato do save? Incremente `v` e migre em `upgradeState` (hoje `v: 2`, migra saves da v0.1).
+- Energia de ação passa por `SE.cost(base, habilidade)` e dá XP com `SE.addXP`.
 
 ## Receita para conteúdo novo
 

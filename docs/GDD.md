@@ -195,40 +195,72 @@ Objetivos guiados no canto da tela levam o jogador do primeiro mato roçado até
 - Afeto e humor leve. Expressões do interior quando soam naturais ("uma vontade danada", "tem coração de rapadura").
 - Nunca zombar do sotaque ou da pobreza; o interior é lugar de saber.
 
-## 17. Arquitetura técnica (v0.1)
+## 17. Sistemas da v0.2 ("Roça clássica")
+
+A v0.2 aproxima o jogo do ritmo dos clássicos de fazenda em pixel art, com arte, código e textos próprios e o tema do interior brasileiro.
+
+| Sistema | Como funciona |
+|---|---|
+| Visual | Sprites com contorno escuro (`SE.outline`) e sombra no chão; personagens 16×32; árvores 48×64; bordas de grama, margem de rio e canteiro; painéis de madeira com moldura. |
+| HUD | Relógio com mostrador, dia da semana, clima e época; dinheiro em casas; barras verticais de energia (E) e vida (V); barra de 12 itens (1–0, - e =). |
+| Menu | Abas Mochila, Habilidades, Amizades, Criação, Caderno e Opções (Q/E troca de aba). Mochila de 36 espaços. |
+| Diálogo | Caixa larga com retrato expressivo do morador e plaquinha com o nome. |
+| Habilidades | Agricultura, Mineração, Coleta, Pesca e Combate, níveis 0–10 (`SE.XP_LV`). Sobe de nível à noite; cada nível barateia a energia (`SE.cost`) e libera receitas. Combate dá +5 de vida por nível. |
+| Ferramentas | Enxada, regador, machado e picareta com níveis básico → cobre → ferro → ouro. Melhorar na Ferraria do Seu Bastião (R$ 2.000 / 5.000 / 10.000 + 5 barras); fica pronta em 2 dias e chega pelo correio. Enxada e regador melhorados carregam (segurar) para 3, 5 ou 3×3 canteiros. |
+| Objetos com vida | Árvore 8 golpes, toco 3, pedra 1; rochas da gruta conforme o minério. Dano = 1 + nível da ferramenta. |
+| Gruta | Entrada no alto do sítio. Andares 1–30 gerados por autômato celular, em três faixas (pedra, gelo, fogo). Escada aparece ao quebrar rochas; elevador a cada 5 andares. Lesmas e morcegos; facão dado na primeira descida. Desmaiar custa 10% do dinheiro (máx. R$ 500). Bombas abrem caminho. |
+| Fornalha | 5 minérios + 1 carvão viram 1 barra em horas do jogo. Receita chega por carta ao achar o primeiro cobre. |
+| Pesca | Vara chega pelo correio no dia 2. Segure para arremessar, espere o "!", e no minijogo mantenha a barra verde sobre o peixe. 7 peixes por época e horário; isca encurta a espera. |
+| Criação | Baú (36 espaços), espantalho (raio 8 contra os corvos), adubo (+25% de crescimento), irrigador (rega os 4 vizinhos toda manhã), fornalha, bomba, isca. |
+| Corvos | A partir do dia 4, com 10+ plantas fora do alcance de espantalho, corvos podem comer algumas plantas à noite. |
+| Correio | Caixa de correio ao lado da casa; cartas com presentes anexados. |
+| Relatório da noite | Página do que foi vendido no caixote, uma página por nível novo e o resumo do dia. |
+
+Save `v: 2`, na mesma chave. Saves da v0.1 são migrados em `upgradeState`; ninguém acorda dentro da gruta.
+
+## 18. Arquitetura técnica (v0.2)
 
 ```
 index.html        carrega os scripts na ordem
 css/style.css     tela, fontes e controles de toque
 fonts/            VT323 e Press Start 2P (OFL)
 js/util.js        utilidades, RNG determinístico
-js/data.js        itens, culturas, receitas, moradores, notícias, objetivos  ← balanceamento
-js/sprites.js     toda a pixel art procedural
+js/data.js        itens, culturas, receitas, habilidades, peixes, melhorias, moradores  ← balanceamento
+js/sprites.js     terreno, objetos, árvores, plantas e construções (contorno + sombra)
+js/chars.js       pessoas 16×32, retratos, bichos, monstros e ícones dos itens
 js/world.js       mapas do sítio e do vilarejo, colisão
 js/audio.js       música e efeitos (WebAudio)
 js/input.js       teclado, mouse, toque
-js/game.js        regras: inventário, mercado, ações, virada do dia, salvar
-js/ui.js          painéis, diálogos, lojas, mochila, jornal
+js/game.js        regras: inventário, habilidades, ferramentas, criação, correio, virada do dia, salvar
+js/mine.js        gruta: geração dos andares, combate, bombas, desmaio
+js/fishing.js     arremesso, fisgada e minijogo da pescaria
+js/ui.js          painéis: diálogo com retrato, menu em abas, baú, correio, ferraria, lojas
 js/feira.js       montar barraca e simulação da feira
-js/scenes.js      título, criação, introdução, jogo
+js/scenes.js      título, criação, introdução, jogo e HUD
 js/main.js        loop, escala, transições
 ```
 
-Salvamento em `localStorage` (`sitioEsperanca.save.v1`), automático ao dormir e manual pelo menu.
+Salvamento em `localStorage` (`sitioEsperanca.save.v1`, formato `v: 2`), automático ao dormir e manual pelo menu (não salva dentro da gruta).
 
 ---
 
-## 18. Roadmap
+## 19. Roadmap
 
-### v0.2 — "Casa e Bichos"
+### v0.2 — "Roça clássica" (entregue)
+- Visual com contorno e sombra, HUD e menu em abas, diálogo com retrato.
+- Habilidades, ferramentas com níveis e ferraria, correio, criação de objetos.
+- Gruta com 30 andares, minérios, fornalha, combate e bombas.
+- Pesca com minijogo, corvos e espantalho, irrigador e adubo.
+
+### v0.3 — "Casa e Bichos"
 - Interior da casa de taipa (cama, fogão, baú de guardar coisas, calendário na parede).
 - Porcos (e ração de milho), cuidado de saúde com a Dra. Lúcia (bicho doente se mal cuidado).
 - Qualidade dos produtos (comum / prata / ouro) ligada à afeição e ao adubo.
-- Adubo e esterco do curral; irrigação com regador nível 3 e aspersor.
+- Esterco do curral e irrigador de qualidade (3×3).
 - Estufa (plantar fora de época) e **açude** (guardar água na seca).
 - Sons ambiente: galo de manhã, cigarra na seca, sapos nas águas.
 
-### v0.3 — "Feira e Contratos"
+### v0.4 — "Feira e Contratos"
 - Feira com mais barracas concorrentes e preços dos vizinhos.
 - **Contratos** com a cooperativa e compradores da cidade (quantidade, qualidade, prazo, multa).
 - Carroça e trator (velocidade e área de preparo maiores).
@@ -236,19 +268,18 @@ Salvamento em `localStorage` (`sitioEsperanca.save.v1`), automático ao dormir e
 - Jornal com mais notícias e eventos encadeados (geada, praga, festival).
 - Ajudantes contratados (regam e alimentam bichos por uma diária).
 
-### v0.4 — "Festas"
+### v0.5 — "Festas"
 - **Festa Junina** com quadrilha (minijogo de ritmo), comidas típicas e fogueira.
 - **Festa do Peão** (concurso de gado) e **quermesse** da igreja (barraquinhas e prendas).
 - **Festa da Colheita** com concurso de produtos (qualidade e apresentação).
 - Música própria para cada festa (sanfona e zabumba em chiptune).
 
-### v0.5 — "Serra e Gruta"
+### v0.6 — "Serra"
 - Mapa da serra: mata com frutas nativas (pequi, jabuticaba, araticum, cagaita).
-- **Pesca no rio** (minijogo), peixes por época e horário (lambari, traíra, piau, dourado).
-- **Gruta** com andares, mineração (minério, cristal), lanterna e energia.
+- Pesca de lagoa e de peixes lendários; andares secretos da gruta.
 - Segredos do Vô Benedito espalhados pela serra.
 
-### v0.6 — "Vida no Vilarejo"
+### v0.7 — "Vida no Vilarejo"
 - 20 moradores com agenda completa e casas visitáveis.
 - Eventos de coração (cenas aos 2, 4, 6 e 8 corações).
 - Namoro, pedido com uma fita do Senhor do Bonfim e casamento na igreja.
@@ -263,5 +294,4 @@ Salvamento em `localStorage` (`sitioEsperanca.save.v1`), automático ao dormir e
 
 ### Dívidas técnicas a acompanhar
 - Testes automatizados de regras (`game.js`) rodando em Node.
-- Migração de save entre versões (`v` no estado).
 - Separar dados de diálogo em arquivos próprios para facilitar a escrita.

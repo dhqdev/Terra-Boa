@@ -1,13 +1,14 @@
 'use strict';
 // Teclado, mouse/toque e controles na tela.
 (function (SE) {
-  const I = (SE.input = { down: {}, pressed: {}, typed: [], typing: false, mouse: { x: -1, y: -1, click: false }, wheel: 0, touch: false });
+  const I = (SE.input = { down: {}, pressed: {}, typed: [], typing: false, mouse: { x: -1, y: -1, click: false, down: false }, wheel: 0, touch: false });
   const MAP = {
     ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
     Space: 'a', Enter: 'a', NumpadEnter: 'a', KeyJ: 'a', Escape: 'b', KeyK: 'b', KeyI: 'inv', Tab: 'inv',
     KeyQ: 'prev', KeyE: 'next', KeyM: 'mute', ShiftLeft: 'run', ShiftRight: 'run', KeyF: 'fast',
   };
   for (let i = 1; i <= 10; i++) MAP['Digit' + (i % 10)] = 'h' + i;
+  MAP.Minus = 'h11'; MAP.Equal = 'h12';
   const REPEAT = { up: 1, down: 1, left: 1, right: 1 };
 
   window.addEventListener('keydown', (e) => {
@@ -35,7 +36,7 @@
     if (k) I.down[k] = false;
     I.shift = e.shiftKey;
   });
-  window.addEventListener('blur', () => { I.down = {}; });
+  window.addEventListener('blur', () => { I.down = {}; I.mouse.down = false; });
 
   // consome um toque de tecla
   I.take = function (k) { if (I.pressed[k]) { I.pressed[k] = false; return true; } return false; };
@@ -58,9 +59,13 @@
       if (SE.audio && !SE.audio.ctx) SE.audio.init();
       toGame(e);
       I.mouse.click = true;
+      I.mouse.down = true;
       I.mouse.touch = e.pointerType === 'touch';
       e.preventDefault();
     });
+    const up = () => { I.mouse.down = false; };
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
     canvas.addEventListener('wheel', (e) => { I.wheel += Math.sign(e.deltaY); e.preventDefault(); }, { passive: false });
     canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 

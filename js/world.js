@@ -20,6 +20,7 @@
   fillG(farm, 8, 9, 13, 9, 'p');
   fillG(farm, 30, 12, 31, 13, 'p');
   fillG(farm, 1, 28, 38, 29, 'w');
+  fillG(farm, 20, 5, 20, 13, 'p');
   farm.buildings = [
     { id: 'casa', art: 'casa', x: 5, y: 5, w: 5, h: 3, over: 20, name: 'Casa de taipa', act: 'casa', variant: (s) => (s.flags.casaReformada ? 'reformada' : '') ,
       lights: [[14, 42], [62, 42]] },
@@ -30,6 +31,8 @@
     { id: 'casa_farinha', art: 'casa_farinha', x: 12, y: 11, w: 3, h: 2, over: 6, name: 'Casa de farinha', act: 'station', variant: (s) => (s.stations.casa_farinha.ok ? 'ok' : '') },
     { id: 'terreiro', art: 'terreiro', x: 16, y: 11, w: 3, h: 2, over: 6, name: 'Terreiro de café', act: 'station', variant: (s) => (s.stations.terreiro.ok ? 'ok' : '') },
     { id: 'cocho', art: 'cocho', x: 25, y: 6, w: 2, h: 1, over: 0, name: 'Cocho do curral', act: 'cocho' },
+    { id: 'correio', art: 'correio', x: 4, y: 7, w: 1, h: 1, over: 10, name: 'Caixa de correio', act: 'correio' },
+    { id: 'gruta', art: 'gruta', x: 19, y: 3, w: 3, h: 2, over: 14, name: 'Gruta da serra', act: 'gruta' },
   ];
   farm.exits = [{ x0: 39, y0: 14, x1: 39, y1: 15, to: 'vila', tx: 1.5, ty: 14, dir: 3, name: 'Estrada para o vilarejo' }];
   farm.curral = { x0: 25, y0: 7, x1: 35, y1: 11 };
@@ -47,6 +50,7 @@
   fillG(vila, 24, 15, 24, 19, 'p');
   fillG(vila, 26, 20, 36, 20, 'c');
   fillG(vila, 0, 22, 39, 23, 'r');
+  fillG(vila, 11, 11, 12, 12, 'p');
   vila.buildings = [
     { id: 'igreja', art: 'igreja', x: 17, y: 3, w: 6, h: 4, over: 22, name: 'Igreja de São Benedito', act: 'igreja', lights: [[10, 34], [86, 34]] },
     { id: 'armazem', art: 'armazem', x: 3, y: 8, w: 6, h: 3, over: 18, name: 'Armazém do Seu Jorge', act: 'armazem', lights: [[15, 32], [77, 32]] },
@@ -57,6 +61,7 @@
     { id: 'estacao', art: 'estacao', x: 27, y: 17, w: 8, h: 3, over: 16, name: 'Estação Ferroviária da Serra', act: 'estacao', variant: (s) => (s.projDone.estacao ? 'aberta' : '') },
     { id: 'ponto', art: 'ponto', x: 1, y: 11, w: 2, h: 1, over: 14, name: 'Ponto de ônibus', act: 'ponto' },
     { id: 'barraca', art: 'barraca', x: 20, y: 10, w: 2, h: 1, over: 14, name: 'Sua barraca da feira', act: 'feira' },
+    { id: 'ferraria', art: 'ferraria', x: 10, y: 8, w: 4, h: 3, over: 18, name: 'Ferraria do Seu Bastião', act: 'ferraria', lights: [[16, 34]] },
     { id: 'mural', art: 'mural', x: 15, y: 8, w: 1, h: 1, over: 8, name: 'Mural da comunidade', act: 'mural' },
     { id: 'barraca2', art: 'barraca', x: 16, y: 10, w: 2, h: 1, over: 14, name: 'Barraca de verduras', act: 'feirante', variant: () => '#27ae60', when: (s) => SE.isFeiraDay(s) },
     { id: 'barraca3', art: 'barraca', x: 23, y: 10, w: 2, h: 1, over: 14, name: 'Barraca de pastel', act: 'feirante', variant: () => '#2e6db5', when: (s) => SE.isFeiraDay(s) },
@@ -76,14 +81,18 @@
   SE.objAt = function (m, x, y) {
     if (x < 0 || y < 0 || x >= m.w || y >= m.h) return '';
     if (m.id === 'farm') return SE.state.farmObj[y * m.w + x] || '';
+    if (m.id === 'mina') return m.obj[y * m.w + x] || '';
     return m.deco[y * m.w + x] || '';
   };
-  SE.setObj = function (m, x, y, v) { if (m.id === 'farm') SE.state.farmObj[y * m.w + x] = v; };
-  const SOLID_OBJ = { m: 1, p: 1, k: 1, T: 1, P: 1, J: 1, A: 1, I: 1, b: 1, F: 1, h: 1, l: 1 };
+  SE.setObj = function (m, x, y, v) {
+    if (m.id === 'farm') SE.state.farmObj[y * m.w + x] = v;
+    else if (m.id === 'mina') m.obj[y * m.w + x] = v;
+  };
+  const SOLID_OBJ = { m: 1, p: 1, k: 1, T: 1, P: 1, J: 1, A: 1, I: 1, b: 1, F: 1, h: 1, l: 1, C: 1, E: 1, R: 1, O: 1, r: 1, c: 1, f: 1, o: 1, q: 1, L: 1, U: 1 };
   SE.isSolidTile = function (m, x, y) {
     if (x < 0 || y < 0 || x >= m.w || y >= m.h) return true;
     const g = m.ground[y * m.w + x];
-    if (g === 's' || g === 'w') return true;
+    if (g === 's' || g === 'w' || g === 'x') return true;
     if (SOLID_OBJ[SE.objAt(m, x, y)]) return true;
     if (SE.buildingAt(m, x, y, SE.state)) return true;
     return false;
@@ -147,6 +156,17 @@
     for (let y = 17; y <= 19; y++) for (let x = 3; x <= 7; x++) o[y * m.w + x] = '';
     return o;
   };
+
+  // Saves antigos: limpa objetos que ficaram sobre caminhos ou construções novas
+  SE.cleanFarmObj = function (o) {
+    const m = farm;
+    for (let y = 0; y < m.h; y++) for (let x = 0; x < m.w; x++) {
+      const i = y * m.w + x;
+      if (o[i] && (m.ground[i] !== 'g' || SE.buildingAt(m, x, y, null))) o[i] = '';
+    }
+    return o;
+  };
+  SE.isEdgeTree = (m, x, y) => x === 0 || y === 3 || x === m.w - 1 || y === m.h - 1;
 
   SE.tileCenter = (tx, ty) => [tx * T + T / 2, ty * T + T / 2];
 })(window.SE);

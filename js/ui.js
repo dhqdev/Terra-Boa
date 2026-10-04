@@ -31,22 +31,35 @@
   ui.measure = (c, s, size) => { c.font = ui.font(size || 10); return c.measureText(s).width; };
   ui.panel = function (c, x, y, w, h, o) {
     o = o || {};
-    c.fillStyle = 'rgba(0,0,0,0.25)'; c.fillRect(x + 2, y + 2, w, h);
-    c.fillStyle = '#3a2412'; c.fillRect(x, y, w, h);
-    c.fillStyle = o.frame || '#9a6232'; c.fillRect(x + 1, y + 1, w - 2, h - 2);
-    c.fillStyle = '#c4884a'; c.fillRect(x + 1, y + 1, w - 2, 1);
-    c.fillStyle = '#3a2412'; c.fillRect(x + 3, y + 3, w - 6, h - 6);
-    c.fillStyle = o.bg || '#f4e4bc'; c.fillRect(x + 4, y + 4, w - 8, h - 8);
-    c.fillStyle = 'rgba(160,110,50,0.18)'; c.fillRect(x + 4, y + h - 6, w - 8, 2);
+    c.fillStyle = 'rgba(0,0,0,0.28)'; c.fillRect(x + 2, y + 3, w, h);
+    c.fillStyle = '#3a1a08'; c.fillRect(x, y, w, h);
+    c.fillStyle = o.frame || '#c26b2a'; c.fillRect(x + 1, y + 1, w - 2, h - 2);
+    c.fillStyle = '#e89a4a'; c.fillRect(x + 1, y + 1, w - 2, 1); c.fillRect(x + 1, y + 1, 1, h - 2);
+    c.fillStyle = '#8a4418'; c.fillRect(x + 1, y + h - 2, w - 2, 1); c.fillRect(x + w - 2, y + 1, 1, h - 2);
+    c.fillStyle = '#5a2a0a'; c.fillRect(x + 4, y + 4, w - 8, h - 8);
+    c.fillStyle = o.bg || '#f8dca4'; c.fillRect(x + 5, y + 5, w - 10, h - 10);
+    c.fillStyle = 'rgba(255,255,255,0.25)'; c.fillRect(x + 5, y + 5, w - 10, 1);
+    c.fillStyle = 'rgba(160,90,30,0.15)'; c.fillRect(x + 5, y + h - 7, w - 10, 2);
+    // rebites nos cantos
+    c.fillStyle = '#f2c070';
+    [[x + 2, y + 2], [x + w - 4, y + 2], [x + 2, y + h - 4], [x + w - 4, y + h - 4]].forEach(([a, b]) => c.fillRect(a, b, 2, 2));
+  };
+  ui.slot = function (c, x, y, w, h, o) {
+    o = o || {};
+    c.fillStyle = '#b8743a'; c.fillRect(x, y, w, h);
+    c.fillStyle = o.dark ? '#d8b070' : '#f4d090'; c.fillRect(x + 1, y + 1, w - 2, h - 2);
+    c.fillStyle = 'rgba(120,60,20,0.25)'; c.fillRect(x + 1, y + 1, w - 2, 1); c.fillRect(x + 1, y + 1, 1, h - 2);
+    if (o.sel) { c.fillStyle = '#d9342b'; c.fillRect(x - 1, y - 1, w + 2, 2); c.fillRect(x - 1, y + h - 1, w + 2, 2); c.fillRect(x - 1, y - 1, 2, h + 2); c.fillRect(x + w - 1, y - 1, 2, h + 2); }
   };
   ui.btn = function (c, x, y, w, h, label, o) {
     o = o || {};
     const hov = SE.isHover(x, y, w, h);
     const sel = o.sel || hov;
-    c.fillStyle = '#3a2412'; c.fillRect(x, y, w, h);
-    c.fillStyle = o.disabled ? '#b0a080' : sel ? '#f2c94c' : '#e8cf96'; c.fillRect(x + 1, y + 1, w - 2, h - 2);
-    c.fillStyle = 'rgba(255,255,255,0.35)'; c.fillRect(x + 1, y + 1, w - 2, 1);
-    ui.text(c, label, x + w / 2, y + Math.floor((h - 9) / 2), { align: 'center', col: o.disabled ? '#6a5a40' : '#3a2412', size: o.size || 10 });
+    c.fillStyle = '#3a1a08'; c.fillRect(x, y, w, h);
+    c.fillStyle = o.disabled ? '#b8a080' : sel ? '#f2c94c' : '#f0c27a'; c.fillRect(x + 1, y + 1, w - 2, h - 2);
+    c.fillStyle = 'rgba(255,255,255,0.4)'; c.fillRect(x + 1, y + 1, w - 2, 1);
+    c.fillStyle = 'rgba(120,50,10,0.3)'; c.fillRect(x + 1, y + h - 2, w - 2, 1);
+    ui.text(c, label, x + w / 2, y + Math.floor((h - 9) / 2), { align: 'center', col: o.disabled ? '#6a5a40' : '#3a1a08', size: o.size || 10 });
     if (o.fn) SE.addHit(x, y, w, h, o.fn);
   };
   ui.heart = function (c, x, y, full) {
@@ -103,11 +116,12 @@
   };
   function DialogPanel(lines, opts) {
     const pages = [];
+    const BX = 10, BW = W - 20, BH = 76, BY = H - BH - 4, PW = 68;
     lines.forEach((l) => {
       const hasP = !!l.who;
-      mctx.font = ui.font(10);
-      const wrapped = SE.wrap(mctx, l.text, W - 16 - 16 - (hasP ? 44 : 0));
-      for (let i = 0; i < wrapped.length; i += 4) pages.push({ who: l.who, lines: wrapped.slice(i, i + 4) });
+      mctx.font = ui.font(11);
+      const wrapped = SE.wrap(mctx, l.text, BW - 24 - (hasP ? PW + 4 : 0));
+      for (let i = 0; i < wrapped.length; i += 5) pages.push({ who: l.who, emo: l.emo, lines: wrapped.slice(i, i + 5) });
     });
     let pi = 0, chars = 0, cur = 0, t = 0;
     const p = {
@@ -133,43 +147,43 @@
       },
       draw(c) {
         const pg = pages[pi];
-        const x = 8, y = H - 64, w = W - 16, h = 58;
+        const x = BX, y = BY, w = BW, h = BH;
         ui.panel(c, x, y, w, h);
-        let tx = x + 10;
+        const tx = x + 12;
         if (pg.who) {
           const n = SE.NPCS[pg.who];
-          c.fillStyle = '#e8d4a0'; c.fillRect(x + 7, y + 7, 36, 44);
-          c.drawImage(SE.personSprite(n.look, 0, 0), x + 9, y + 4, 32, 48);
-          tx = x + 50;
-          const nw = ui.measure(c, n.name, 10) + 12;
-          ui.panel(c, x + 6, y - 16, nw + 74, 18, { bg: '#f2c94c' });
-          ui.text(c, n.name, x + 12, y - 11);
-          const hs = SE.hearts(SE.state.npcs[pg.who].f);
-          for (let i = 0; i < 10; i++) if (i < 10) ui.heart(c, x + 12 + nw + i * 6.5 - 4, y - 9, i < hs);
+          const px = x + w - PW - 6, py = y + 5;
+          c.fillStyle = '#5a2a0a'; c.fillRect(px - 2, py, 1, h - 10);
+          c.fillStyle = '#e8b878'; c.fillRect(px + 2, py + 1, PW - 4, 52);
+          c.fillStyle = '#d8a060'; c.fillRect(px + 2, py + 41, PW - 4, 12);
+          SE.blit(c, SE.portraitSprite(n.look, pg.emo), px + (PW - 48) / 2, py + 3);
+          c.fillStyle = '#3a1a08'; c.fillRect(px + 1, py + 54, PW - 2, 13);
+          c.fillStyle = '#f2c070'; c.fillRect(px + 2, py + 55, PW - 4, 11);
+          ui.text(c, n.name, px + PW / 2, py + 56, { align: 'center', size: 10, col: '#3a1a08' });
         }
         let left = Math.floor(chars);
         pg.lines.forEach((ln, i) => {
           const s = ln.slice(0, Math.max(0, left));
           left -= ln.length;
-          ui.text(c, s, tx, y + 8 + i * 11);
+          ui.text(c, s, tx, y + 9 + i * 12, { size: 11 });
         });
         const total = pg.lines.join('').length;
         if (chars >= total && !(pi === pages.length - 1 && opts.choices)) {
-          const b = Math.floor(t * 3) % 2;
-          c.fillStyle = '#c0392b'; c.fillRect(x + w - 14, y + h - 12 + b, 5, 2); c.fillRect(x + w - 13, y + h - 10 + b, 3, 1); c.fillRect(x + w - 12, y + h - 9 + b, 1, 1);
+          const b = Math.floor(t * 3) % 2, ax = x + (pg.who ? w - PW - 20 : w - 16);
+          c.fillStyle = '#d9342b'; c.fillRect(ax, y + h - 14 + b, 6, 2); c.fillRect(ax + 1, y + h - 12 + b, 4, 1); c.fillRect(ax + 2, y + h - 11 + b, 2, 1);
         }
         SE.addHit(x, y, w, h, () => advance());
         if (pi === pages.length - 1 && chars >= total && opts.choices) {
-          const cw = Math.max(120, ...opts.choices.map((ch) => ui.measure(c, ch.t, 10) + 24));
-          const ch = opts.choices.length * 13 + 10;
-          const cx = W - cw - 10, cy = y - ch - 4;
+          const cw = Math.max(130, ...opts.choices.map((ch) => ui.measure(c, ch.t, 10) + 26));
+          const ch = opts.choices.length * 14 + 12;
+          const cx = W - cw - 12, cy = y - ch - 3;
           ui.panel(c, cx, cy, cw, ch);
           opts.choices.forEach((o, i) => {
-            const ry = cy + 5 + i * 13;
-            if (SE.isHover(cx, ry, cw, 13)) cur = i;
-            if (i === cur) { c.fillStyle = 'rgba(242,201,76,0.6)'; c.fillRect(cx + 4, ry, cw - 8, 12); ui.cursor(c, cx + 6, ry + 2, t); }
-            ui.text(c, o.t, cx + 14, ry + 1);
-            SE.addHit(cx, ry, cw, 13, () => choose(i));
+            const ry = cy + 6 + i * 14;
+            if (SE.isHover(cx, ry, cw, 14)) cur = i;
+            if (i === cur) { c.fillStyle = 'rgba(242,170,60,0.45)'; c.fillRect(cx + 5, ry, cw - 10, 13); ui.cursor(c, cx + 7, ry + 3, t); }
+            ui.text(c, o.t, cx + 15, ry + 2);
+            SE.addHit(cx, ry, cw, 14, () => choose(i));
           });
         }
       },
@@ -346,7 +360,8 @@
           s.money -= f.price; s.energy = Math.min(s.maxEnergy, s.energy + f.energy);
           SE.audio.play('harvest'); SE.toast('Que delícia! +' + f.energy + ' energia', '#ffe08a');
         },
-      })),
+      })).concat(kind === 'bar' ? [{ label: 'Isca para pescar (5)', icon: 'isca', right: SE.money(25), sub: 'O Zé vende minhoca boa: o peixe morde em metade do tempo.',
+        fn: () => { const s = SE.state; if (s.money < 25) { SE.toast('Dinheiro insuficiente.', '#ffb0a0'); return; } s.money -= 25; SE.give('isca', 5); SE.audio.play('coin'); } }] : []),
     });
   };
 
@@ -417,112 +432,399 @@
     });
   };
 
-  // ---------------------------------------------------------------- Mochila
-  SE.InventoryPanel = function () {
-    let cur = SE.state.sel, moving = -1, t = 0;
-    const COLS = 10, SZ = 22;
-    const p = {
-      modal: true,
-      update(dt) {
-        t += dt;
-        if (I.take('b') || I.take('inv')) { SE.closePanel(p); SE.audio.play('back'); return; }
-        if (I.take('left')) { cur = (cur + 29) % 30; SE.audio.play('move'); }
-        if (I.take('right')) { cur = (cur + 1) % 30; SE.audio.play('move'); }
-        if (I.take('up')) { cur = (cur + 20) % 30; SE.audio.play('move'); }
-        if (I.take('down')) { cur = (cur + 10) % 30; SE.audio.play('move'); }
+  // ---------------------------------------------------------------- Menu do jogo (abas)
+  const TABS = ['Mochila', 'Habilidades', 'Amizades', 'Criação', 'Caderno', 'Opções'];
+  SE.GameMenu = function (startTab) {
+    let tab = startTab || 0, t = 0, cur = SE.state.sel, held = -1, scroll = 0, ccur = 0, ocur = 0;
+    const PW = 348, PH = 186;
+    const X = Math.round((W - PW) / 2), Y = 22;
+    const p = { modal: true, isMenu: true };
+    const close = () => { held = -1; SE.closePanel(p); SE.audio.play('back'); };
+    const opts = () => [
+      { t: 'Salvar jogo', fn: () => SE.saveGame(false) },
+      { t: 'Música: ' + (SE.audio.music ? 'ligada' : 'desligada'), fn: () => SE.audio.toggleMusic() },
+      { t: 'Como jogar', fn: () => SE.openPanel(SE.HelpPanel()) },
+      { t: 'Cotações do mercado', fn: () => SE.openPanel(SE.MarketPanel()) },
+      { t: 'Sair para a tela inicial', fn: () => SE.say('Salvar antes de sair?', { choices: [
+        { t: 'Salvar e sair', fn: () => { SE.saveGame(true); SE.panels.length = 0; SE.setScene(SE.TitleScene()); } },
+        { t: 'Sair sem salvar', fn: () => { SE.panels.length = 0; SE.setScene(SE.TitleScene()); } },
+        { t: 'Cancelar', fn: () => {} }] }) },
+    ];
+    const setTab = (i) => { tab = (i + TABS.length) % TABS.length; scroll = 0; SE.audio.play('move'); };
+    p.update = function (dt) {
+      t += dt;
+      if (I.take('b') || I.take('inv')) return close();
+      if (I.take('prev')) setTab(tab - 1);
+      if (I.take('next')) setTab(tab + 1);
+      const s = SE.state;
+      if (tab === 0) {
+        const n = SE.INV_SIZE, C = 12;
+        if (I.take('left')) { cur = (cur + n - 1) % n; SE.audio.play('move'); }
+        if (I.take('right')) { cur = (cur + 1) % n; SE.audio.play('move'); }
+        if (I.take('up')) { cur = (cur + n - C) % n; SE.audio.play('move'); }
+        if (I.take('down')) { cur = (cur + C) % n; SE.audio.play('move'); }
+        for (let i = 1; i <= 12; i++) if (I.take('h' + i)) { const tmp = s.inv[i - 1]; s.inv[i - 1] = s.inv[cur]; s.inv[cur] = tmp; SE.audio.play('select'); }
         if (I.take('a')) pick(cur);
-      },
-      draw(c) {
-        const s = SE.state;
-        const PW = COLS * SZ + 20, PH = 184;
-        const x = Math.round((W - PW) / 2), y = Math.round((H - PH) / 2) - 6;
-        ui.panel(c, x, y, PW, PH);
-        ui.text(c, 'Mochila', x + 10, y + 8, { size: 8, title: true, col: '#7a3a1a' });
-        ui.text(c, SE.money(s.money) + '  ·  Energia ' + Math.round(s.energy) + '/' + s.maxEnergy + '  ·  Água ' + s.water + '/' + s.waterMax, x + PW / 2, y + 101, { align: 'center', col: '#2a6a2a' });
-        ui.btn(c, x + PW - 20, y + 6, 13, 12, 'x', { fn: () => { SE.closePanel(p); } });
-        for (let i = 0; i < 30; i++) {
-          const cx = x + 10 + (i % COLS) * SZ, cy = y + 22 + Math.floor(i / COLS) * (SZ + 2) + (i >= 10 ? 4 : 0);
-          if (SE.isHover(cx, cy, SZ - 2, SZ - 2)) cur = i;
-          c.fillStyle = i < 10 ? '#c49a6a' : '#d8b880'; c.fillRect(cx, cy, SZ - 2, SZ - 2);
-          c.fillStyle = '#e8d4a0'; c.fillRect(cx + 1, cy + 1, SZ - 4, SZ - 4);
-          const it = s.inv[i];
-          if (it && i !== moving) {
-            SE.drawIcon(c, it.id, cx + 2, cy + 2);
-            if (it.q > 1) ui.text(c, String(it.q), cx + SZ - 3, cy + SZ - 11, { align: 'right', col: '#ffffff', shadow: '#3a2412', size: 9 });
-          }
-          if (i === moving) { c.fillStyle = 'rgba(192,57,43,0.3)'; c.fillRect(cx + 1, cy + 1, SZ - 4, SZ - 4); }
-          if (i === cur) { c.strokeStyle = '#c0392b'; c.lineWidth = 1; c.strokeRect(cx - 0.5, cy - 0.5, SZ - 1, SZ - 1); c.strokeRect(cx + 0.5, cy + 0.5, SZ - 3, SZ - 3); }
-          if (i === s.sel) { c.fillStyle = '#f2c94c'; c.fillRect(cx, cy - 2, SZ - 2, 1); }
-          SE.addHit(cx, cy, SZ - 2, SZ - 2, () => { cur = i; pick(i); });
-        }
-        ui.text(c, 'linha de cima = barra rápida (1-0)', x + PW - 24, y + 8, { align: 'right', size: 9, col: '#9a7a5a' });
-        if (moving >= 0 && s.inv[moving]) {
-          const mx = SE.clamp(I.mouse.x, 0, W - 16), my = SE.clamp(I.mouse.y, 0, H - 16);
-          if (!I.touch && I.mouse.x >= 0) SE.drawIcon(c, s.inv[moving].id, mx - 8, my - 8);
-        }
-        const it = s.inv[cur];
-        const dy = y + 114;
-        c.fillStyle = '#e8d4a0'; c.fillRect(x + 8, dy, PW - 16, PH - (dy - y) - 8);
-        if (it) {
-          const def = SE.ITEMS[it.id];
-          SE.drawIcon(c, it.id, x + 12, dy + 4, 2);
-          ui.text(c, SE.itemName(it.id) + (it.q > 1 ? ' x' + it.q : ''), x + 48, dy + 4, { col: '#7a3a1a' });
-          c.font = ui.font(10);
-          SE.wrap(c, def.desc || '', PW - 60).slice(0, 3).forEach((ln, i) => ui.text(c, ln, x + 48, dy + 15 + i * 10, { col: '#5a3a1e' }));
-          const info = [];
-          if (SE.isSellable(it.id)) info.push('Mercado: ' + SE.money(SE.refPrice(it.id)));
-          if (def.eat) info.push('Energia: +' + def.eat);
-          ui.text(c, info.join('   '), x + 48, dy + 45, { col: '#2a6a2a' });
-        } else ui.text(c, moving >= 0 ? 'Escolha onde colocar.' : 'Espaço vazio.', x + 48, dy + 6, { col: '#9a7a5a' });
-        ui.text(c, moving >= 0 ? 'Espaço: soltar aqui' : 'Espaço: opções do item  ·  Esc: fechar', x + PW / 2, y + PH - 15, { align: 'center', size: 9, col: '#9a7a5a' });
-      },
+      } else if (tab === 3) {
+        const n = SE.CRAFT.length;
+        if (I.take('left')) ccur = (ccur + n - 1) % n;
+        if (I.take('right')) ccur = (ccur + 1) % n;
+        if (I.take('up')) ccur = Math.max(0, ccur - 6);
+        if (I.take('down')) ccur = Math.min(n - 1, ccur + 6);
+        if (I.take('a')) SE.craft(SE.CRAFT[ccur]);
+      } else if (tab === 5) {
+        const o = opts();
+        if (I.take('up')) { ocur = (ocur + o.length - 1) % o.length; SE.audio.play('move'); }
+        if (I.take('down')) { ocur = (ocur + 1) % o.length; SE.audio.play('move'); }
+        if (I.take('a')) { SE.audio.play('select'); o[ocur].fn(); }
+      } else {
+        if (I.take('left')) setTab(tab - 1);
+        if (I.take('right')) setTab(tab + 1);
+        if (I.take('up') || I.wheel < 0) scroll = Math.max(0, scroll - 1);
+        if (I.take('down') || I.wheel > 0) scroll++;
+      }
     };
+    p.draw = function (c) {
+      const s = SE.state;
+      c.fillStyle = 'rgba(10,6,20,0.45)'; c.fillRect(0, 0, W, H);
+      // abas
+      const tw = 56;
+      TABS.forEach((nm, i) => {
+        const tx = X + 6 + i * (tw + 1), ty = Y - 15 + (i === tab ? 0 : 3);
+        c.fillStyle = '#3a1a08'; c.fillRect(tx, ty, tw, 18);
+        c.fillStyle = i === tab ? '#f8dca4' : '#c26b2a'; c.fillRect(tx + 1, ty + 1, tw - 2, 17);
+        c.fillStyle = i === tab ? '#ffffff' : '#e89a4a'; c.fillRect(tx + 1, ty + 1, tw - 2, 1);
+        ui.text(c, nm, tx + tw / 2, ty + 4, { align: 'center', size: 10, col: i === tab ? '#7a3a1a' : '#3a1a08' });
+        SE.addHit(tx, ty, tw, 16, () => setTab(i));
+      });
+      ui.panel(c, X, Y, PW, PH);
+      [drawInv, drawSkills, drawFriends, drawCraft, drawNotes, drawOpts][tab](c, s);
+      ui.btn(c, X + PW - 18, Y + 6, 12, 12, 'x', { fn: close });
+      if (held >= 0 && s.inv[held] && !I.touch && I.mouse.x >= 0) SE.drawIcon(c, s.inv[held].id, SE.clamp(I.mouse.x - 8, 0, W - 16), SE.clamp(I.mouse.y - 8, 0, H - 16));
+    };
+
+    // ------ Mochila
+    function drawInv(c, s) {
+      const SZ = 19, gx = X + 12, gy = Y + 12;
+      for (let i = 0; i < SE.INV_SIZE; i++) {
+        const cx = gx + (i % 12) * SZ, cy = gy + Math.floor(i / 12) * SZ + (i >= 12 ? 3 : 0);
+        if (SE.isHover(cx, cy, SZ - 1, SZ - 1)) cur = i;
+        ui.slot(c, cx, cy, SZ - 1, SZ - 1, { sel: i === cur, dark: i >= 12 });
+        const it = s.inv[i];
+        if (it && i !== held) {
+          SE.drawIcon(c, it.id, cx + 1, cy + 1);
+          if (it.q > 1) ui.text(c, String(it.q), cx + SZ - 2, cy + SZ - 11, { align: 'right', col: '#ffffff', shadow: '#3a1a08', size: 9 });
+        }
+        if (i === held) { c.fillStyle = 'rgba(217,52,43,0.25)'; c.fillRect(cx + 1, cy + 1, SZ - 3, SZ - 3); }
+        if (i === s.sel) { c.fillStyle = '#f2c94c'; c.fillRect(cx + 2, cy + SZ - 3, SZ - 5, 1); }
+        if (i < 12) ui.text(c, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='][i], cx + 2, cy + 1, { size: 8, col: 'rgba(90,42,10,0.55)' });
+        SE.addHit(cx, cy, SZ - 1, SZ - 1, () => { cur = i; pick(i); });
+      }
+      // ficha do jogador
+      const fx = X + 250, fy = Y + 10;
+      c.fillStyle = '#e8b878'; c.fillRect(fx, fy, 88, 62);
+      SE.blit(c, SE.portraitSprite(SE.LOOKS[s.look], 'h'), fx + 4, fy + 4);
+      ui.text(c, s.name, fx + 56, fy + 6, { size: 10, col: '#7a3a1a' });
+      ui.text(c, SE.money(s.money), fx + 56, fy + 18, { size: 9, col: '#2a6a2a' });
+      ui.text(c, 'E ' + Math.round(s.energy) + '/' + s.maxEnergy, fx + 56, fy + 30, { size: 9, col: '#3a6a1a' });
+      ui.text(c, 'V ' + Math.round(s.hp) + '/' + s.maxHp, fx + 56, fy + 40, { size: 9, col: '#a02a2a' });
+      ui.text(c, 'Água ' + s.water + '/' + s.waterMax, fx + 6, fy + 52, { size: 9, col: '#2a5a9a' });
+      // descrição
+      const dy = Y + 76;
+      c.fillStyle = '#efc888'; c.fillRect(X + 10, dy, PW - 20, PH - (dy - Y) - 10);
+      const it = s.inv[cur];
+      if (it) {
+        const def = SE.ITEMS[it.id];
+        SE.drawIcon(c, it.id, X + 14, dy + 6, 2);
+        ui.text(c, SE.itemName(it.id) + (it.q > 1 ? ' x' + it.q : ''), X + 52, dy + 4, { col: '#7a3a1a', size: 11 });
+        c.font = ui.font(10);
+        SE.wrap(c, def.desc || '', PW - 140).slice(0, 4).forEach((ln, i) => ui.text(c, ln, X + 52, dy + 17 + i * 10, { col: '#5a3a1e' }));
+        const info = [];
+        if (SE.isSellable(it.id)) info.push('Mercado: ' + SE.money(SE.refPrice(it.id)));
+        if (def.eat) info.push('Energia +' + def.eat + '  Vida +' + Math.round(def.eat * 0.45));
+        ui.text(c, info.join('   '), X + 52, dy + 60, { col: '#2a6a2a', size: 9 });
+        const bx = X + PW - 82;
+        if (def.eat) ui.btn(c, bx, dy + 6, 68, 14, 'Comer', { fn: () => SE.eat(it.id) });
+        if (cur >= 12) ui.btn(c, bx, dy + 24, 68, 14, 'Pôr na mão', { fn: () => { const tmp = s.inv[s.sel]; s.inv[s.sel] = s.inv[cur]; s.inv[cur] = tmp; SE.audio.play('select'); } });
+        else ui.btn(c, bx, dy + 24, 68, 14, 'Segurar', { fn: () => { s.sel = cur; close(); } });
+        if (!SE.isTool(it.id)) ui.btn(c, bx, dy + 42, 68, 14, 'Jogar fora', { fn: () => SE.say('Jogar fora ' + SE.itemName(it.id) + ' x' + it.q + '?', { choices: [{ t: 'Jogar fora', fn: () => { if (s.inv[cur] === it) s.inv[cur] = null; SE.audio.play('cut'); } }, { t: 'Cancelar', fn: () => {} }] }) });
+      } else ui.text(c, held >= 0 ? 'Escolha onde colocar.' : 'Espaço vazio.', X + 52, dy + 8, { col: '#9a7a5a' });
+      ui.text(c, held >= 0 ? 'Espaço: soltar aqui' : 'Espaço: pegar/mover  ·  1-0: pôr na barra', X + 14, Y + PH - 18, { size: 9, col: '#9a6a3a' });
+    }
     function pick(i) {
       const s = SE.state;
-      if (moving >= 0) {
-        const a = s.inv[moving], b = s.inv[i];
-        if (a && b && a.id === b.id && i !== moving && SE.ITEMS[a.id].cat !== 'tool') {
-          const n = Math.min(a.q, 99 - b.q); b.q += n; a.q -= n; if (a.q <= 0) s.inv[moving] = null;
-        } else { s.inv[moving] = b; s.inv[i] = a; }
-        moving = -1; SE.audio.play('select');
+      if (held >= 0) {
+        const a = s.inv[held], b = s.inv[i];
+        if (a && b && a.id === b.id && i !== held && !SE.isTool(a.id)) {
+          const n = Math.min(a.q, 99 - b.q); b.q += n; a.q -= n; if (a.q <= 0) s.inv[held] = null;
+        } else { s.inv[held] = b; s.inv[i] = a; }
+        held = -1; SE.audio.play('select');
         return;
       }
-      const it = s.inv[i];
-      if (!it) return;
-      const def = SE.ITEMS[it.id];
-      const ch = [{ t: 'Mover', fn: () => { moving = i; } }];
-      if (i >= 10) ch.push({ t: 'Pôr na barra rápida', fn: () => { const sel = s.sel; const tmp = s.inv[sel]; s.inv[sel] = s.inv[i]; s.inv[i] = tmp; SE.toast(def.name + ' está na sua mão.', '#e0d0b0'); } });
-      else ch.push({ t: 'Segurar', fn: () => { s.sel = i; SE.closePanel(p); } });
-      if (def.eat) ch.push({ t: 'Comer (+' + def.eat + ' energia)', fn: () => SE.eat(it.id) });
-      ch.push({ t: 'Cancelar', fn: () => {} });
-      SE.say(SE.itemName(it.id) + (it.q > 1 ? ' (' + it.q + ')' : ''), { choices: ch });
+      if (s.inv[i]) { held = i; SE.audio.play('select'); }
+    }
+
+    // ------ Habilidades
+    function drawSkills(c, s) {
+      SE.SKILLS.forEach((sk, i) => {
+        const ry = Y + 12 + i * 33, lv = s.lvl[sk.id] || 0, xp = s.xp[sk.id] || 0;
+        c.fillStyle = i % 2 ? '#f2d098' : '#efc888'; c.fillRect(X + 8, ry - 2, PW - 16, 32);
+        SE.drawIcon(c, sk.icon, X + 14, ry + 6, 1);
+        ui.text(c, sk.name, X + 36, ry, { size: 11, col: '#7a3a1a' });
+        ui.text(c, 'Nível ' + lv, X + 120, ry + 1, { size: 10, col: '#3a1a08' });
+        for (let j = 0; j < 10; j++) {
+          const px = X + 170 + j * 16;
+          c.fillStyle = '#5a2a0a'; c.fillRect(px, ry + 1, 13, 9);
+          c.fillStyle = j < lv ? (j === 4 || j === 9 ? '#f28a2a' : '#f2c94c') : '#c8a070'; c.fillRect(px + 1, ry + 2, 11, 7);
+          if (j < lv) { c.fillStyle = '#fff2b0'; c.fillRect(px + 1, ry + 2, 11, 1); }
+        }
+        const prev = lv ? SE.XP_LV[lv - 1] : 0, next = SE.XP_LV[lv];
+        if (next) ui.bar(c, X + 170, ry + 13, 158, 4, (xp - prev) / (next - prev), '#6ab04a');
+        c.font = ui.font(9);
+        ui.text(c, SE.wrap(c, sk.perk, 280)[0], X + 36, ry + 19, { size: 9, col: '#7a5a3a' });
+        if (next) ui.text(c, xp + '/' + next + ' xp', X + 120, ry + 11, { size: 9, col: '#9a6a3a' });
+      });
+    }
+
+    // ------ Amizades
+    function drawFriends(c, s) {
+      const ids = Object.keys(SE.NPCS);
+      const RH = 24, vis = 7;
+      scroll = SE.clamp(scroll, 0, Math.max(0, ids.length - vis));
+      ids.slice(scroll, scroll + vis).forEach((id, k) => {
+        const n = SE.NPCS[id], st = s.npcs[id], ry = Y + 10 + k * RH;
+        c.fillStyle = k % 2 ? '#f2d098' : '#efc888'; c.fillRect(X + 8, ry, PW - 16, RH - 2);
+        if (st.met) SE.blit(c, SE.portraitSprite(n.look, 'n'), X + 10, ry + 1, 0.42);
+        else { c.fillStyle = '#7a5a3a'; c.fillRect(X + 12, ry + 2, 17, 18); ui.text(c, '?', X + 20, ry + 6, { align: 'center', col: '#f8dca4' }); }
+        ui.text(c, st.met ? n.name : '???', X + 36, ry + 2, { size: 10, col: '#7a3a1a' });
+        ui.text(c, st.met ? n.role : 'Ainda não conhece', X + 36, ry + 12, { size: 9, col: '#9a6a3a' });
+        const hs = SE.hearts(st.f);
+        for (let j = 0; j < 10; j++) ui.heart(c, X + 150 + j * 9, ry + 4, j < hs);
+        ui.text(c, st.gift === s.day ? 'presente: ok' : 'presente: -', X + 248, ry + 2, { size: 9, col: st.gift === s.day ? '#2a7a2a' : '#9a7a5a' });
+        ui.text(c, st.talk === s.day ? 'conversa: ok' : 'conversa: -', X + 248, ry + 11, { size: 9, col: st.talk === s.day ? '#2a7a2a' : '#9a7a5a' });
+        if (st.met) SE.addHit(X + 8, ry, PW - 16, RH - 2, () => SE.toast(n.name + ' adora: ' + n.loves.map((x) => SE.ITEMS[x].name).join(', '), '#ffd0e0'));
+      });
+      if (ids.length > vis) {
+        ui.btn(c, X + PW - 20, Y + 22, 12, 12, '▲', { size: 8, fn: () => { scroll = Math.max(0, scroll - 1); } });
+        ui.btn(c, X + PW - 20, Y + PH - 26, 12, 12, '▼', { size: 8, fn: () => { scroll++; } });
+      }
+    }
+
+    // ------ Criação
+    function drawCraft(c, s) {
+      const SZ = 26;
+      ui.text(c, 'Receitas', X + 12, Y + 8, { size: 10, col: '#7a3a1a' });
+      SE.CRAFT.forEach((r, i) => {
+        const cx = X + 12 + (i % 6) * (SZ + 2), cy = Y + 22 + Math.floor(i / 6) * (SZ + 2);
+        const un = SE.craftUnlocked(r), ok = un && SE.craftOk(r);
+        if (SE.isHover(cx, cy, SZ, SZ)) ccur = i;
+        ui.slot(c, cx, cy, SZ, SZ, { sel: i === ccur, dark: !ok });
+        if (un) { SE.drawIcon(c, r.id, cx + 5, cy + 5); if (!ok) { c.fillStyle = 'rgba(240,200,140,0.5)'; c.fillRect(cx + 1, cy + 1, SZ - 2, SZ - 2); } }
+        else ui.text(c, '?', cx + SZ / 2, cy + 8, { align: 'center', col: '#9a6a3a', size: 11 });
+        SE.addHit(cx, cy, SZ, SZ, () => { if (ccur === i) SE.craft(r); ccur = i; });
+      });
+      const r = SE.CRAFT[ccur], un = SE.craftUnlocked(r);
+      const dx = X + 186, dy = Y + 10, dw = PW - 196;
+      c.fillStyle = '#efc888'; c.fillRect(dx, dy, dw, PH - 20);
+      ui.text(c, un ? SE.ITEMS[r.id].name + (r.n > 1 ? ' x' + r.n : '') : '???', dx + 6, dy + 4, { size: 11, col: '#7a3a1a' });
+      c.font = ui.font(9);
+      SE.wrap(c, un ? SE.ITEMS[r.id].desc : SE.craftReqText(r), dw - 12).slice(0, 3).forEach((ln, i) => ui.text(c, ln, dx + 6, dy + 18 + i * 9, { size: 9, col: '#5a3a1e' }));
+      if (un) {
+        Object.keys(r.inp).forEach((k, i) => {
+          const have = SE.invCount(k), need = r.inp[k], ry = dy + 50 + i * 17;
+          SE.drawIcon(c, k, dx + 6, ry);
+          ui.text(c, SE.ITEMS[k].name, dx + 26, ry + 3, { size: 10 });
+          ui.text(c, have + '/' + need, dx + dw - 8, ry + 3, { align: 'right', size: 10, col: have >= need ? '#2a7a2a' : '#c0392b' });
+        });
+        ui.btn(c, dx + dw / 2 - 30, dy + PH - 42, 60, 15, 'Criar', { disabled: !SE.craftOk(r), fn: () => SE.craft(r) });
+      }
+      ui.text(c, 'Novas receitas chegam com os níveis de habilidade.', X + 12, Y + PH - 18, { size: 9, col: '#9a6a3a' });
+    }
+
+    // ------ Caderno (objetivos e jornal)
+    function drawNotes(c, s) {
+      ui.text(c, 'Objetivos', X + 12, Y + 8, { size: 10, col: '#7a3a1a' });
+      const vis = 9;
+      scroll = SE.clamp(scroll, 0, Math.max(0, SE.OBJECTIVES.length - vis));
+      c.font = ui.font(9);
+      SE.OBJECTIVES.slice(scroll, scroll + vis).forEach((o, k) => {
+        const i = k + scroll, ry = Y + 22 + k * 16;
+        const done = i < s.goal, now = i === s.goal;
+        c.fillStyle = now ? '#f2c94c' : k % 2 ? '#f2d098' : '#efc888'; c.fillRect(X + 8, ry, 196, 15);
+        ui.text(c, done ? '✓' : now ? '!' : '·', X + 13, ry + 3, { col: done ? '#2a7a2a' : '#c0392b' });
+        ui.text(c, SE.wrap(c, o.t, 176)[0], X + 22, ry + 3, { size: 9, col: done ? '#8a7a5a' : i > s.goal ? '#a08a6a' : '#3a1a08' });
+      });
+      const nx = X + 212, nw = PW - 222;
+      c.fillStyle = '#efe8d8'; c.fillRect(nx, Y + 10, nw, PH - 20);
+      ui.text(c, 'O Eco da Serra', nx + nw / 2, Y + 14, { align: 'center', size: 7, title: true, col: '#1a1a1a' });
+      c.fillStyle = '#1a1a1a'; c.fillRect(nx + 6, Y + 26, nw - 12, 1);
+      c.font = ui.font(10);
+      if (s.news) {
+        const n = SE.NEWS[s.news.i];
+        let yy = Y + 30;
+        SE.wrap(c, n.title, nw - 12).forEach((ln) => { ui.text(c, ln, nx + 6, yy, { size: 10, col: '#1a1a1a' }); yy += 10; });
+        c.font = ui.font(9);
+        SE.wrap(c, n.text, nw - 12).slice(0, 7).forEach((ln) => { ui.text(c, ln, nx + 6, yy + 2, { size: 9, col: '#4a4a4a' }); yy += 9; });
+      } else ui.text(c, 'Jornal novo toda segunda.', nx + 6, Y + 32, { size: 9, col: '#4a4a4a' });
+      ui.btn(c, nx + 8, Y + PH - 30, nw - 16, 14, 'Cotações', { fn: () => SE.openPanel(SE.MarketPanel()) });
+    }
+
+    // ------ Opções
+    function drawOpts(c) {
+      const o = opts();
+      o.forEach((op, i) => {
+        const by = Y + 24 + i * 24;
+        if (SE.isHover(X + PW / 2 - 90, by, 180, 18)) ocur = i;
+        ui.btn(c, X + PW / 2 - 90, by, 180, 18, op.t, { sel: i === ocur, fn: () => { ocur = i; op.fn(); } });
+      });
+      ui.text(c, 'O jogo salva sozinho toda noite ao dormir.', X + PW / 2, Y + PH - 20, { align: 'center', size: 9, col: '#9a6a3a' });
     }
     return p;
   };
+  SE.InventoryPanel = () => SE.GameMenu(0);
+  SE.PauseMenu = () => SE.GameMenu(0);
 
-  // ---------------------------------------------------------------- Diário (objetivos, amizades, mercado)
-  SE.DiaryPanel = function () {
+  // ---------------------------------------------------------------- Baú
+  SE.ChestPanel = function (key) {
+    const s = SE.state;
+    if (!s.chests[key]) s.chests[key] = new Array(SE.INV_SIZE).fill(null);
+    let cur = 0, t = 0;
+    const SZ = 19, PW = 12 * SZ + 24, PH = 172;
+    const p = { modal: true };
+    const slotOf = (i) => (i < 36 ? [s.chests[key], i] : [s.inv, i - 36]);
+    function move(i) {
+      const [from, fi] = slotOf(i), it = from[fi];
+      if (!it) return;
+      const to = i < 36 ? s.inv : s.chests[key];
+      let q = it.q;
+      if (!SE.isTool(it.id)) to.forEach((x) => { if (q > 0 && x && x.id === it.id && x.q < 99) { const n = Math.min(q, 99 - x.q); x.q += n; q -= n; } });
+      for (let k = 0; k < to.length && q > 0; k++) if (!to[k]) { to[k] = { id: it.id, q }; q = 0; }
+      if (q === it.q) { SE.toast('Sem espaço do outro lado.', '#ffb0a0'); SE.audio.play('error'); return; }
+      if (q > 0) it.q = q; else from[fi] = null;
+      SE.audio.play('select');
+    }
+    p.update = function (dt) {
+      t += dt;
+      if (I.take('b') || I.take('inv')) { SE.closePanel(p); SE.audio.play('back'); return; }
+      if (I.take('left')) cur = (cur + 71) % 72;
+      if (I.take('right')) cur = (cur + 1) % 72;
+      if (I.take('up')) cur = (cur + 60) % 72;
+      if (I.take('down')) cur = (cur + 12) % 72;
+      if (I.take('a')) move(cur);
+    };
+    p.draw = function (c) {
+      const x = Math.round((W - PW) / 2), y = Math.round((H - PH) / 2);
+      ui.panel(c, x, y, PW, PH);
+      ui.btn(c, x + PW - 18, y + 6, 12, 12, 'x', { fn: () => SE.closePanel(p) });
+      ui.text(c, 'Baú', x + 12, y + 7, { size: 10, col: '#7a3a1a' });
+      ui.text(c, 'Mochila', x + 12, y + 82, { size: 10, col: '#7a3a1a' });
+      for (let i = 0; i < 72; i++) {
+        const [arr, k] = slotOf(i);
+        const cx = x + 12 + (k % 12) * SZ, cy = y + (i < 36 ? 19 : 94) + Math.floor(k / 12) * SZ;
+        if (SE.isHover(cx, cy, SZ - 1, SZ - 1)) cur = i;
+        ui.slot(c, cx, cy, SZ - 1, SZ - 1, { sel: i === cur, dark: i < 36 });
+        const it = arr[k];
+        if (it) { SE.drawIcon(c, it.id, cx + 1, cy + 1); if (it.q > 1) ui.text(c, String(it.q), cx + SZ - 2, cy + SZ - 11, { align: 'right', col: '#ffffff', shadow: '#3a1a08', size: 9 }); }
+        SE.addHit(cx, cy, SZ - 1, SZ - 1, () => { cur = i; move(i); });
+      }
+      const [arr, k] = slotOf(cur);
+      ui.text(c, arr[k] ? SE.itemName(arr[k].id) + ' x' + arr[k].q + '  ·  Espaço/clique: passar para o outro lado' : 'Espaço/clique: passar o item para o outro lado', x + PW / 2, y + PH - 16, { align: 'center', size: 9, col: '#9a6a3a' });
+    };
+    return p;
+  };
+
+  // ---------------------------------------------------------------- Correio
+  SE.MailPanel = function () {
+    let cur = 0, t = 0;
+    const p = { modal: true };
+    const take = (ml) => {
+      const left = [];
+      ml.items.forEach(([id, q]) => { const r = SE.invAdd(id, q); if (q - r > 0) SE.toast('+' + (q - r) + ' ' + SE.itemName(id), '#bff0a0', id); if (r > 0) left.push([id, r]); });
+      if (left.length) SE.toast('Mochila cheia! O resto fica na carta.', '#ffb0a0');
+      ml.items = left; SE.audio.play('harvest');
+      SE.checkGoals();
+    };
+    p.update = function (dt) {
+      t += dt;
+      const mail = SE.state.mail;
+      if (I.take('b') || I.take('inv')) { SE.closePanel(p); SE.audio.play('back'); return; }
+      if (I.take('up')) cur = Math.max(0, cur - 1);
+      if (I.take('down')) cur = Math.min(mail.length - 1, cur + 1);
+      if (mail[cur]) mail[cur].read = true;
+      if (I.take('a') && mail[cur] && mail[cur].items.length) take(mail[cur]);
+    };
+    p.draw = function (c) {
+      const mail = SE.state.mail, x = 16, y = 12, w = W - 32, h = H - 24;
+      ui.panel(c, x, y, w, h);
+      ui.btn(c, x + w - 18, y + 6, 12, 12, 'x', { fn: () => SE.closePanel(p) });
+      ui.text(c, 'Cartas', x + 12, y + 8, { size: 10, col: '#7a3a1a' });
+      mail.slice(0, 9).forEach((ml, i) => {
+        const ry = y + 22 + i * 18;
+        if (SE.isHover(x + 8, ry, 100, 16)) cur = i;
+        ui.slot(c, x + 8, ry, 100, 16, { sel: i === cur, dark: ml.read });
+        c.fillStyle = ml.read ? '#d8c8a8' : '#ffffff'; c.fillRect(x + 12, ry + 4, 10, 8); c.fillStyle = '#c0392b'; c.fillRect(x + 16, ry + 7, 2, 2);
+        ui.text(c, ml.from, x + 26, ry + 3, { size: 9, col: ml.read ? '#8a6a4a' : '#3a1a08' });
+        SE.addHit(x + 8, ry, 100, 16, () => { cur = i; });
+      });
+      const ml = mail[cur];
+      if (!ml) return;
+      ml.read = true;
+      const px = x + 116, pw = w - 128;
+      c.fillStyle = '#fbf2da'; c.fillRect(px, y + 8, pw, h - 16);
+      c.fillStyle = '#e8d8b8'; for (let ly = y + 30; ly < y + h - 20; ly += 12) c.fillRect(px + 6, ly + 10, pw - 12, 1);
+      ui.text(c, 'De: ' + ml.from, px + 8, y + 14, { size: 10, col: '#7a3a1a' });
+      c.font = ui.font(10);
+      SE.wrap(c, ml.text, pw - 16).slice(0, 10).forEach((ln, i) => ui.text(c, ln, px + 8, y + 30 + i * 12, { col: '#3a2412' }));
+      if (ml.items.length) {
+        ml.items.forEach(([id, q], i) => { ui.slot(c, px + 8 + i * 22, y + h - 34, 20, 20); SE.drawIcon(c, id, px + 10 + i * 22, y + h - 32); if (q > 1) ui.text(c, String(q), px + 27 + i * 22, y + h - 24, { align: 'right', size: 9, col: '#fff', shadow: '#3a1a08' }); });
+        ui.btn(c, px + pw - 70, y + h - 32, 62, 16, 'Pegar', { fn: () => take(ml) });
+      }
+    };
+    return p;
+  };
+
+  // ---------------------------------------------------------------- Ferraria do Seu Bastião
+  SE.FerrariaPanel = function () {
+    const s = () => SE.state;
     return SE.ListPanel({
-      title: 'Caderno do sítio', w: 330, h: 196,
+      title: 'Ferraria do Seu Bastião', w: 320, h: 190,
+      header: (c, x, y) => {
+        const u = s().upgrade;
+        ui.text(c, u ? 'Na bigorna: ' + SE.ITEMS[u.tool].name + ' ' + SE.UPGRADES[u.lvl - 1].name + ' (chega pelo correio no dia ' + u.day + ')' : 'Traga 5 barras e o dinheiro: em 2 dias chega pelo correio.', x, y, { col: '#7a3a1a', size: 9 });
+      },
+      headerH: 13,
       tabs: [
-        { name: 'Objetivos', rows: () => SE.OBJECTIVES.map((o, i) => ({ label: o.t, right: i < SE.state.goal ? 'FEITO' : i === SE.state.goal ? 'AGORA' : '', rightCol: i < SE.state.goal ? '#2a7a2a' : '#c0392b', disabled: i > SE.state.goal, sub: 'Grande meta: reerguer o sítio e trazer o vilarejo de volta à vida.' })) },
-        { name: 'Amizades', rows: () => Object.keys(SE.NPCS).map((id) => {
-          const n = SE.NPCS[id], st = SE.state.npcs[id];
-          return { label: st.met ? n.name + ' · ' + n.role : '???', right: SE.hearts(st.f) + '/10 corações', bar: st.f / 1000,
-            sub: st.met ? 'Adora: ' + n.loves.map((x) => SE.ITEMS[x].name).join(', ') + '. Converse todo dia e dê presentes (segure o item e fale com a pessoa).' : 'Você ainda não conhece essa pessoa. Passeie pelo vilarejo!' };
-        }) },
-        { name: 'Mercado', rows: () => Object.keys(SE.ITEMS).filter((id) => SE.isSellable(id) && !['seed', 'res', 'feed', 'place'].includes(SE.ITEMS[id].cat)).map((id) => {
-          const m = SE.mult(id);
-          return { label: SE.itemName(id), icon: id, right: SE.money(SE.refPrice(id)) + (m > 1.05 ? '  ALTA' : m < 0.95 ? '  BAIXA' : ''), rightCol: m > 1.05 ? '#2a7a2a' : m < 0.95 ? '#c0392b' : null,
-            sub: 'Preço base ' + SE.money(SE.basePrice(id)) + '. Vender muito de uma vez derruba o preço; ele se recupera aos poucos.' };
+        { name: 'Comprar', rows: () => SE.FERRARIA_SHOP.map(([id, price]) => ({ label: SE.ITEMS[id].name, icon: id, right: SE.money(price), sub: SE.ITEMS[id].desc,
+          fn: () => SE.qtyChoice('Quantos ' + SE.ITEMS[id].name + '?', Math.min(Math.floor(s().money / price), SE.invSpace(id), 99), price, (n) => { s().money -= n * price; SE.give(id, n); SE.audio.play('coin'); }) })) },
+        { name: 'Melhorar', rows: () => SE.UPGRADABLE.map((tool) => {
+          const lvl = s().tools[tool], up = SE.UPGRADES[lvl];
+          if (!up) return { label: SE.itemName(tool), icon: tool, right: 'MÁXIMO', rightCol: '#2a7a2a', disabled: true, sub: 'Já é de ouro! Não tem como melhorar mais.' };
+          const bars = SE.invCount(up.bar);
+          return { label: SE.ITEMS[tool].name + ' ' + up.name, icon: up.bar, right: SE.money(up.price) + ' + 5 barras',
+            sub: 'Você tem ' + bars + '/5 ' + SE.ITEMS[up.bar].name.toLowerCase() + '. ' + (tool === 'enxada' || tool === 'regador' ? 'Segure o botão para atingir mais canteiros.' : 'Mais força: quebra e corta com menos golpes.'),
+            disabled: !!s().upgrade, why: 'O Seu Bastião só trabalha numa ferramenta por vez.',
+            fn: () => SE.say('Melhorar ' + SE.itemName(tool) + ' por ' + SE.money(up.price) + ' e 5 barras? Você fica 2 dias sem ela.', { choices: [{ t: 'Pode fazer', fn: () => SE.startUpgrade(tool) }, { t: 'Agora não', fn: () => {} }] }) };
         }) },
       ],
     });
   };
 
+  // ---------------------------------------------------------------- Cotações
+  SE.MarketPanel = function () {
+    return SE.ListPanel({
+      title: 'Cotações do mercado', w: 320, h: 190,
+      rows: () => Object.keys(SE.ITEMS).filter((id) => SE.isSellable(id) && !['seed', 'res', 'feed', 'place', 'fert', 'bait', 'bomb'].includes(SE.ITEMS[id].cat)).map((id) => {
+        const m = SE.mult(id);
+        return { label: SE.itemName(id), icon: id, right: SE.money(SE.refPrice(id)) + (m > 1.05 ? '  ALTA' : m < 0.95 ? '  BAIXA' : ''), rightCol: m > 1.05 ? '#2a7a2a' : m < 0.95 ? '#c0392b' : null,
+          sub: 'Preço base ' + SE.money(SE.basePrice(id)) + '. Vender muito de uma vez derruba o preço; ele se recupera aos poucos.' };
+      }),
+    });
+  };
+
   SE.HelpPanel = function () {
     const pages = [
-      ['Como jogar', 'Setas ou WASD: andar  ·  Shift: correr', 'Espaço / Enter: usar ferramenta, colher, conversar', 'I ou Tab: mochila  ·  Esc: menu', '1-0, Q/E ou rodinha do mouse: trocar item', 'M: música liga/desliga', 'No celular: use os botões na tela.'],
+      ['Como jogar', 'Setas ou WASD: andar  ·  Shift: correr', 'Espaço / Enter: usar ferramenta, colher, conversar', 'Segure Espaço: carregar enxada/regador melhorados e a vara', 'Esc, I ou Tab: menu (mochila, habilidades, criação...)', '1-0, - e =, Q/E ou rodinha do mouse: trocar item', 'M: música  ·  No celular: use os botões na tela.'],
+      ['Gruta e pescaria', 'A gruta fica no alto do sítio. Quebre pedras com a', 'picareta para achar minério e a escada para descer.', 'Segure o facão e aperte Espaço para lutar.', 'A cada 5 andares o elevador passa a parar ali.', 'Pescar: segure Espaço para arremessar no rio. Quando', 'aparecer "!", aperte e segure para subir a barra verde.'],
       ['Na roça', 'Foice roça o mato (e dá capim). Machado tira tocos.', 'Picareta quebra pedra. Enxada ara a terra.', 'Plante na época certa e regue todo dia.', 'Encha o regador no poço ou no rio.', 'Nas ÁGUAS chove muito e tudo cresce rápido,', 'mas o temporal estraga o que já está maduro.', 'Na SECA, planta sem água murcha em 2 dias.'],
       ['Bichos e doces', 'Compre bichos no armazém. Faça carinho todo dia.', 'Afeição alta = produção em dobro.', 'Na seca, encha o cocho com capim ou ração.', 'Fogão a lenha, engenho, casa de farinha e terreiro', 'transformam a colheita em produto artesanal,', 'que vale bem mais. Fica pronto nos dias seguintes.'],
       ['Comércio', 'Armazém do Seu Jorge: compra sempre, paga 60%.', 'Caixote no sítio: o caminhão passa de madrugada.', 'Feira de sábado (7h às 13h) na praça:', 'você escolhe os produtos e define o preço.', 'Caro demais espanta freguês; barato demais é prejuízo.', 'O Jornal de segunda mexe com os preços da semana.'],
@@ -550,52 +852,71 @@
     return p;
   };
 
-  SE.PauseMenu = function () {
-    return SE.ListPanel({
-      title: 'Menu', w: 220, h: 170,
-      rows: () => [
-        { label: 'Voltar ao jogo', fn: () => SE.closePanel(SE.topPanel()) },
-        { label: 'Mochila', fn: () => { SE.closePanel(SE.topPanel()); SE.openPanel(SE.InventoryPanel()); } },
-        { label: 'Caderno: objetivos, amizades e preços', fn: () => SE.openPanel(SE.DiaryPanel()) },
-        { label: 'Salvar jogo', fn: () => SE.saveGame(false) },
-        { label: 'Como jogar', fn: () => SE.openPanel(SE.HelpPanel()) },
-        { label: 'Música: ' + (SE.audio.music ? 'ligada' : 'desligada'), fn: () => SE.audio.toggleMusic() },
-        { label: 'Sair para a tela inicial', sub: 'O progresso é salvo automaticamente ao dormir.', fn: () => SE.say('Salvar antes de sair?', { choices: [
-          { t: 'Salvar e sair', fn: () => { SE.saveGame(true); SE.panels.length = 0; SE.setScene(SE.TitleScene()); } },
-          { t: 'Sair sem salvar', fn: () => { SE.panels.length = 0; SE.setScene(SE.TitleScene()); } },
-          { t: 'Cancelar', fn: () => {} }] }) },
-      ],
-      footer: () => '',
-    });
-  };
-
   // ---------------------------------------------------------------- Fim do dia e jornal
   SE.DayPanel = function (rep) {
-    let t = 0;
+    let t = 0, pg = 0;
+    const pages = [];
+    if (rep.shipped.length) pages.push('venda');
+    rep.levels.forEach((lv) => pages.push(lv));
+    pages.push('dia');
     const p = {
       modal: true,
       update(dt) {
         t += dt;
-        if (t > 0.6 && (I.take('a') || I.take('b'))) close();
+        if (t > 0.5 && (I.take('a') || I.take('b'))) next();
       },
       draw(c) {
-        c.fillStyle = 'rgba(10,14,32,0.94)'; c.fillRect(0, 0, W, H);
-        const s = SE.state, cal = SE.cal();
-        ui.text(c, 'Bom dia!', W / 2, 18, { align: 'center', size: 12, title: true, col: '#f2c94c', shadow: '#000' });
-        ui.text(c, SE.WEEKDAYS[cal.wd] + ', dia ' + cal.dia + ' da ' + SE.EPOCAS[cal.epoca].name + ' · Ano ' + cal.ano, W / 2, 38, { align: 'center', col: '#ffffff' });
-        let y = 58;
-        c.font = ui.font(10);
-        const lines = rep.lines.length ? rep.lines : ['Noite tranquila no sítio. Os grilos cantaram até o galo assumir.'];
-        lines.forEach((l) => SE.wrap(c, '• ' + l, W - 60).forEach((ln) => { ui.text(c, ln, 30, y, { col: '#e8dcc0' }); y += 11; }));
-        y += 6;
-        ui.text(c, 'Hoje: ' + SE.WEATHER[s.weather].name + '   ·   Amanhã: ' + SE.WEATHER[rep.forecast].name + '   ·   Dinheiro: ' + SE.money(s.money), W / 2, Math.max(y, 150), { align: 'center', col: '#a0d0ff' });
-        const g = SE.currentGoal();
-        if (g) ui.text(c, 'Objetivo: ' + g.t, W / 2, Math.max(y, 150) + 14, { align: 'center', col: '#f2c94c' });
-        if (t > 0.6) ui.text(c, '[Espaço] Começar o dia', W / 2, H - 20, { align: 'center', col: Math.floor(t * 2) % 2 ? '#ffffff' : '#c8c8c8' });
-        SE.addHit(0, 0, W, H, () => { if (t > 0.6) close(); });
+        c.fillStyle = '#0e1226'; c.fillRect(0, 0, W, H);
+        for (let i = 0; i < 40; i++) { c.fillStyle = SE.hash(i, 1, 9) > 0.7 ? '#ffffff' : '#6a78a8'; c.fillRect(SE.hash(i, 2, 9) * W, SE.hash(3, i, 9) * H * 0.5, 1, 1); }
+        const s = SE.state, cal = SE.cal(), P = pages[pg];
+        if (P === 'venda') {
+          const x = 46, y = 12, w = W - 92, h = H - 34;
+          ui.panel(c, x, y, w, h);
+          ui.text(c, 'Caixote do Seu Jorge', W / 2, y + 9, { align: 'center', size: 8, title: true, col: '#7a3a1a' });
+          let yy = y + 26;
+          rep.shipped.slice(0, 8).forEach((it) => {
+            SE.drawIcon(c, it.id, x + 14, yy);
+            ui.text(c, SE.itemName(it.id) + ' x' + it.q, x + 34, yy + 3);
+            c.fillStyle = 'rgba(122,58,26,0.35)'; for (let dx = x + 150; dx < x + w - 70; dx += 4) c.fillRect(dx, yy + 10, 2, 1);
+            ui.text(c, SE.money(it.v), x + w - 14, yy + 3, { align: 'right', col: '#2a6a2a' });
+            yy += 17;
+          });
+          if (rep.shipped.length > 8) ui.text(c, '+ ' + (rep.shipped.length - 8) + ' outros itens', x + 34, yy + 2, { size: 9, col: '#9a6a3a' });
+          c.fillStyle = '#7a3a1a'; c.fillRect(x + 12, y + h - 28, w - 24, 1);
+          ui.text(c, 'Total', x + 14, y + h - 22, { size: 11, col: '#7a3a1a' });
+          ui.text(c, SE.money(rep.earned), x + w - 14, y + h - 22, { align: 'right', size: 11, col: '#2a6a2a' });
+        } else if (P !== 'dia') {
+          const sk = SE.SKILLS.find((k) => k.id === P.id);
+          const x = 70, y = 30, w = W - 140, h = 140;
+          ui.panel(c, x, y, w, h);
+          ui.text(c, 'Subiu de nível!', W / 2, y + 12, { align: 'center', size: 9, title: true, col: '#c0392b' });
+          SE.drawIcon(c, sk.icon, W / 2 - 16, y + 30, 2);
+          ui.text(c, sk.name + ': nível ' + P.lvl, W / 2, y + 68, { align: 'center', size: 12, col: '#7a3a1a' });
+          c.font = ui.font(10);
+          SE.wrap(c, sk.perk, w - 30).forEach((ln, i) => ui.text(c, ln, W / 2, y + 84 + i * 11, { align: 'center', col: '#5a3a1e' }));
+          if (P.unlock.length) ui.text(c, 'Nova receita: ' + P.unlock.join(', '), W / 2, y + h - 22, { align: 'center', col: '#2a6a2a' });
+          if (t < 0.1) SE.audio.play('level');
+        } else {
+          ui.text(c, 'Bom dia!', W / 2, 16, { align: 'center', size: 12, title: true, col: '#f2c94c', shadow: '#000' });
+          ui.text(c, SE.WEEKDAYS[cal.wd] + ', dia ' + cal.dia + ' da ' + SE.EPOCAS[cal.epoca].name + ' · Ano ' + cal.ano, W / 2, 36, { align: 'center', col: '#ffffff' });
+          let y = 54;
+          c.font = ui.font(10);
+          const lines = rep.lines.slice();
+          if (rep.earned) lines.unshift('O caminhão do Seu Jorge passou e pagou ' + SE.money(rep.earned) + ' pelo caixote.');
+          if (rep.mail) lines.push('Tem carta nova na caixa de correio!');
+          if (!lines.length) lines.push('Noite tranquila no sítio. Os grilos cantaram até o galo assumir.');
+          lines.forEach((l) => SE.wrap(c, '• ' + l, W - 60).forEach((ln) => { if (y < 148) ui.text(c, ln, 30, y, { col: '#e8dcc0' }); y += 11; }));
+          y = Math.min(Math.max(y + 6, 150), 160);
+          ui.text(c, 'Hoje: ' + SE.WEATHER[s.weather].name + '   ·   Amanhã: ' + SE.WEATHER[rep.forecast].name + '   ·   Dinheiro: ' + SE.money(s.money), W / 2, y, { align: 'center', col: '#a0d0ff' });
+          const g = SE.currentGoal();
+          if (g) ui.text(c, 'Objetivo: ' + g.t, W / 2, y + 13, { align: 'center', col: '#f2c94c' });
+        }
+        if (t > 0.5) ui.text(c, '[Espaço] ' + (pg < pages.length - 1 ? 'Continuar' : 'Começar o dia'), W / 2, H - 16, { align: 'center', col: Math.floor(t * 2) % 2 ? '#ffffff' : '#c8c8c8' });
+        SE.addHit(0, 0, W, H, () => { if (t > 0.5) next(); });
       },
     };
-    function close() {
+    function next() {
+      if (pg < pages.length - 1) { pg++; t = 0; SE.audio.play('select'); return; }
       SE.closePanel(p);
       if (rep.news) SE.openPanel(SE.JornalPanel());
     }

@@ -132,6 +132,21 @@
       case 'sleep': [659, 523, 440, 392].forEach((f, i) => tone('triangle', f, t + i * 0.18, 0.3, 0.14)); break;
       case 'door': noise(t, 0.15, 0.3, 300, 1); break;
       case 'goal': [523, 659, 784, 1047].forEach((f, i) => tone('square', f, t + i * 0.08, 0.18, 0.08)); break;
+      case 'cast': noise(t, 0.25, 0.25, 2400, 0.6); tone('triangle', 880, t, 0.2, 0.05); break;
+      case 'splash': noise(t, 0.3, 0.35, 900, 0.7); break;
+      case 'bite': tone('square', 1320, t, 0.06, 0.12); tone('square', 1320, t + 0.1, 0.06, 0.12); break;
+      case 'reel': tone('square', 700 + Math.random() * 60, t, 0.03, 0.03); break;
+      case 'stone': noise(t, 0.12, 0.5, 600, 2); tone('square', 220, t, 0.06, 0.08); break;
+      case 'break': noise(t, 0.25, 0.5, 500, 1); noise(t + 0.05, 0.2, 0.4, 1500, 1); break;
+      case 'tree': noise(t, 0.6, 0.5, 300, 0.8); tone('sawtooth', 80, t, 0.5, 0.08); break;
+      case 'swing': noise(t, 0.08, 0.3, 4000, 3); break;
+      case 'slime': tone('triangle', 200, t, 0.1, 0.12); tone('triangle', 140, t + 0.05, 0.12, 0.1); break;
+      case 'hurt': tone('square', 220, t, 0.08, 0.14); tone('square', 110, t + 0.06, 0.15, 0.14); break;
+      case 'boom': noise(t, 0.8, 0.8, 120, 0.6); tone('sawtooth', 55, t, 0.6, 0.2); break;
+      case 'ladder': [392, 523, 659].forEach((f, i) => tone('triangle', f, t + i * 0.05, 0.1, 0.1)); break;
+      case 'charge': tone('square', 440 + Math.random() * 10, t, 0.05, 0.05); break;
+      case 'level': [523, 659, 784, 1047, 1319].forEach((f, i) => tone('triangle', f, t + i * 0.1, 0.25, 0.12)); break;
+      case 'mail': tone('triangle', 988, t, 0.1, 0.1); tone('triangle', 784, t + 0.1, 0.15, 0.1); break;
     }
   };
 })(window.SE);

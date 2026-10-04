@@ -22,7 +22,9 @@
     regador: { name: 'Regador', cat: 'tool', icon: ['can'], desc: 'Molha a terra arada. Encha no poço ou no rio.' },
     foice: { name: 'Foice', cat: 'tool', icon: ['sickle'], desc: 'Roça o mato. Às vezes rende capim para os bichos.' },
     machado: { name: 'Machado', cat: 'tool', icon: ['axe'], desc: 'Arranca tocos velhos e rende madeira.' },
-    picareta: { name: 'Picareta', cat: 'tool', icon: ['pick'], desc: 'Quebra as pedras do terreno.' },
+    picareta: { name: 'Picareta', cat: 'tool', icon: ['pick'], desc: 'Quebra pedras e minério. Também recolhe objetos colocados.' },
+    vara: { name: 'Vara de pescar', cat: 'tool', icon: ['rod'], desc: 'Segure o botão para arremessar na água. Quando o peixe morder, aperte de novo!' },
+    facao: { name: 'Facão velho', cat: 'weapon', icon: ['blade'], desc: 'Arma para se defender na gruta. Dano 6 a 10.' },
 
     sem_milho: { name: 'Semente de milho', cat: 'seed', crop: 'milho', price: 10, icon: ['seed', '#f2c94c'] },
     sem_feijao: { name: 'Semente de feijão', cat: 'seed', crop: 'feijao', price: 8, icon: ['seed', '#8a4b2a'] },
@@ -73,7 +75,35 @@
     racao: { name: 'Ração', cat: 'feed', price: 8, icon: ['sack', '#c49a5a'], desc: 'Alimenta um animal por um dia. Use no cocho.' },
     madeira: { name: 'Madeira', cat: 'res', price: 3, icon: ['log'], desc: 'Lenha boa para o fogão.' },
     pedra: { name: 'Pedra', cat: 'res', price: 2, icon: ['rock'], desc: 'Pedra do terreno.' },
-    colmeia: { name: 'Colmeia', cat: 'place', price: 350, icon: ['hive'], desc: 'Coloque no sítio (de frente para a grama). As abelhas fazem mel sozinhas.' },
+    colmeia: { name: 'Colmeia', cat: 'place', obj: 'h', price: 350, icon: ['hive'], desc: 'Coloque no sítio (de frente para a grama). As abelhas fazem mel sozinhas.' },
+    bau: { name: 'Baú', cat: 'place', obj: 'C', price: 0, icon: ['chest'], desc: 'Guarda 36 itens. Coloque no sítio. Recolha com machado ou picareta (vazio).' },
+    espantalho: { name: 'Espantalho', cat: 'place', obj: 'E', price: 0, icon: ['scare'], desc: 'Protege as plantas num raio de 8 passos contra os corvos.' },
+    irrigador: { name: 'Irrigador', cat: 'place', obj: 'R', price: 0, icon: ['sprink'], desc: 'Toda manhã rega os 4 canteiros vizinhos (cima, baixo e lados).' },
+    fornalha: { name: 'Fornalha', cat: 'place', obj: 'O', price: 0, icon: ['furnace'], desc: 'Derrete 5 minérios + 1 carvão numa barra de metal.' },
+    adubo: { name: 'Adubo', cat: 'fert', price: 10, icon: ['fert'], desc: 'Use na terra arada: a planta cresce 25% mais rápido.' },
+    isca: { name: 'Isca', cat: 'bait', price: 5, icon: ['bait'], desc: 'Com isca na mochila, o peixe morde em metade do tempo.' },
+    bomba: { name: 'Bomba de carvão', cat: 'bomb', price: 50, icon: ['bomb'], desc: 'Explode as pedras em volta. Afaste-se depois de acender!' },
+
+    lambari: { name: 'Lambari', cat: 'fish', price: 30, icon: ['fish', '#c8ccd4', '#e8a02a'], eat: 6, desc: 'Peixinho prateado do rio. Frito é uma delícia.' },
+    tilapia: { name: 'Tilápia', cat: 'fish', price: 60, icon: ['fish', '#8a9a8a', '#5a6a5a'], eat: 10, desc: 'Peixe de água calma, carne branca.' },
+    piau: { name: 'Piau', cat: 'fish', price: 75, icon: ['fish', '#c8b07a', '#2a2a2a'], desc: 'Listrado, aparece nas águas.' },
+    bagre: { name: 'Bagre', cat: 'fish', price: 90, icon: ['fish', '#6a5a4a', '#4a3a2a'], desc: 'Bigodudo, gosta da noite.' },
+    traira: { name: 'Traíra', cat: 'fish', price: 110, icon: ['fish', '#5a6a3a', '#3a4a2a'], desc: 'Dentuça e brava. Dá trabalho na seca.' },
+    pacu: { name: 'Pacu', cat: 'fish', price: 130, icon: ['fish', '#a8a8b8', '#e8582a'], desc: 'Redondo e forte, come fruta que cai no rio.' },
+    dourado: { name: 'Dourado', cat: 'fish', price: 300, icon: ['fish', '#f2b030', '#c0392b'], desc: 'O rei do rio! Briga muito e só aparece de manhã nas águas.' },
+    lata: { name: 'Lata velha', cat: 'res', price: 1, icon: ['junk'], desc: 'Alguém jogou isso no rio. Que feio!' },
+
+    carvao: { name: 'Carvão', cat: 'res', price: 15, icon: ['coal'], desc: 'Combustível da fornalha.' },
+    minerio_cobre: { name: 'Minério de cobre', cat: 'res', price: 5, icon: ['ore', '#d0783a'], desc: 'Derreta na fornalha (5 + 1 carvão).' },
+    minerio_ferro: { name: 'Minério de ferro', cat: 'res', price: 10, icon: ['ore', '#dfe6ee'], desc: 'Aparece do andar 10 da gruta para baixo.' },
+    minerio_ouro: { name: 'Minério de ouro', cat: 'res', price: 25, icon: ['ore', '#f2c94c'], desc: 'Só no fundo da gruta, do andar 20 em diante.' },
+    barra_cobre: { name: 'Barra de cobre', cat: 'res', price: 60, icon: ['bar', '#d0783a'], desc: 'Para melhorar ferramentas e fazer irrigadores.' },
+    barra_ferro: { name: 'Barra de ferro', cat: 'res', price: 120, icon: ['bar', '#dfe6ee'], desc: 'Metal forte para ferramentas melhores.' },
+    barra_ouro: { name: 'Barra de ouro', cat: 'res', price: 250, icon: ['bar', '#f2c94c'], desc: 'Brilha que só! Para as melhores ferramentas.' },
+    quartzo: { name: 'Quartzo', cat: 'gem', price: 25, icon: ['gem', '#e8eef8'], desc: 'Cristal transparente das pedras da gruta.' },
+    ametista: { name: 'Ametista', cat: 'gem', price: 100, icon: ['gem', '#a060d0'], desc: 'Pedra roxa e rara, do meio da gruta.' },
+    gosma: { name: 'Gosma', cat: 'res', price: 5, icon: ['slime'], desc: 'Meleca de lesma da gruta. Vira isca.' },
+    peixe_frito: { name: 'Peixe frito', cat: 'artisan', price: 150, icon: ['fish', '#d9a24c', '#a0602a'], eat: 45, desc: 'Empanado na farinha, sequinho.' },
   };
 
   // ---------------------------------------------------------------- Culturas
@@ -123,7 +153,58 @@
     polvilho: { st: 'casa_farinha', inp: { mandioca: 2 }, out: 'polvilho', n: 1, days: 2 },
     fuba: { st: 'casa_farinha', inp: { milho: 2 }, out: 'fuba', n: 1, days: 1 },
     cafe_torrado: { st: 'terreiro', inp: { cafe: 3 }, out: 'cafe_torrado', n: 1, days: 2 },
+    peixe_frito: { st: 'fogao', inp: { tilapia: 1, farinha: 1 }, out: 'peixe_frito', n: 2, days: 1 },
   };
+
+  // ---------------------------------------------------------------- Fornalha (minutos do jogo)
+  SE.SMELT = {
+    minerio_cobre: { out: 'barra_cobre', n: 5, m: 30 },
+    minerio_ferro: { out: 'barra_ferro', n: 5, m: 120 },
+    minerio_ouro: { out: 'barra_ouro', n: 5, m: 300 },
+  };
+
+  // ---------------------------------------------------------------- Criação (menu do jogo)
+  // req: [habilidade, nível] ou 'flag'
+  SE.CRAFT = [
+    { id: 'bau', inp: { madeira: 50 }, n: 1, req: null },
+    { id: 'espantalho', inp: { madeira: 20, carvao: 1, capim: 10 }, n: 1, req: ['agricultura', 1] },
+    { id: 'adubo', inp: { capim: 5 }, n: 3, req: ['agricultura', 2] },
+    { id: 'irrigador', inp: { barra_cobre: 1, barra_ferro: 1 }, n: 1, req: ['agricultura', 3] },
+    { id: 'fornalha', inp: { minerio_cobre: 20, pedra: 25 }, n: 1, req: 'fornalha' },
+    { id: 'bomba', inp: { carvao: 1, minerio_cobre: 4 }, n: 1, req: ['mineracao', 1] },
+    { id: 'isca', inp: { gosma: 1 }, n: 5, req: ['pesca', 2] },
+  ];
+
+  // ---------------------------------------------------------------- Habilidades
+  SE.XP_LV = [100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000];
+  SE.SKILLS = [
+    { id: 'agricultura', name: 'Agricultura', icon: 'enxada', perk: 'Enxada e regador gastam menos energia. Libera espantalho, adubo e irrigador.' },
+    { id: 'mineracao', name: 'Mineração', icon: 'picareta', perk: 'Picareta gasta menos energia e cada nível dá mais chance de minério extra.' },
+    { id: 'coleta', name: 'Coleta', icon: 'pequi', perk: 'Machado gasta menos energia e frutas do mato podem vir em dobro.' },
+    { id: 'pesca', name: 'Pesca', icon: 'lambari', perk: 'A barra verde da pescaria fica maior. No nível 2 libera a isca.' },
+    { id: 'combate', name: 'Combate', icon: 'facao', perk: '+5 de vida máxima e mais dano com o facão a cada nível.' },
+  ];
+
+  // ---------------------------------------------------------------- Peixes (rio do sítio)
+  // h: [hora inicial, hora final); diff 0-100; w: peso do sorteio
+  SE.FISH = {
+    lambari: { ep: ['aguas', 'seca'], h: [6, 26], diff: 15, w: 30, mv: 'calmo' },
+    tilapia: { ep: ['aguas', 'seca'], h: [6, 20], diff: 30, w: 24, mv: 'calmo' },
+    piau: { ep: ['aguas'], h: [6, 19], diff: 40, w: 14, mv: 'misto' },
+    bagre: { ep: ['aguas', 'seca'], h: [18, 26], diff: 45, w: 16, mv: 'afunda' },
+    traira: { ep: ['seca'], h: [6, 26], diff: 62, w: 12, mv: 'arisco' },
+    pacu: { ep: ['aguas'], h: [10, 18], diff: 55, w: 10, mv: 'misto' },
+    dourado: { ep: ['aguas'], h: [6, 12], diff: 85, w: 3, mv: 'arisco' },
+  };
+
+  // ---------------------------------------------------------------- Ferraria do Seu Bastião
+  SE.UPGRADES = [
+    { lvl: 1, name: 'de cobre', price: 2000, bar: 'barra_cobre' },
+    { lvl: 2, name: 'de ferro', price: 5000, bar: 'barra_ferro' },
+    { lvl: 3, name: 'de ouro', price: 10000, bar: 'barra_ouro' },
+  ];
+  SE.UPGRADABLE = ['enxada', 'regador', 'machado', 'picareta'];
+  SE.FERRARIA_SHOP = [['carvao', 60], ['minerio_cobre', 30], ['minerio_ferro', 60], ['minerio_ouro', 120]];
 
   // ---------------------------------------------------------------- Animais
   SE.ANIMALS = {
@@ -141,8 +222,6 @@
       done: (s) => s.stations.casa_farinha.ok, apply: (s) => { s.stations.casa_farinha.ok = true; } },
     { id: 'terreiro', name: 'Refazer o terreiro de café', price: 500, desc: 'Seca e torra o café colhido.',
       done: (s) => s.stations.terreiro.ok, apply: (s) => { s.stations.terreiro.ok = true; } },
-    { id: 'regador', name: 'Regador grande', price: 600, desc: 'Carrega o dobro de água (40).',
-      done: (s) => s.waterMax >= 40, apply: (s) => { s.waterMax = 40; s.water = 40; } },
     { id: 'casa', name: 'Reformar a casa de taipa', price: 3000, desc: 'Telhado novo e cama boa: +30 de energia máxima.',
       done: (s) => !!s.flags.casaReformada, apply: (s) => { s.flags.casaReformada = true; s.maxEnergy = 130; } },
   ];
@@ -189,7 +268,7 @@
       loves: ['cafe_torrado', 'cachaca'], likes: ['rapadura', 'pamonha', 'queijo', 'pao_queijo'], dislikes: ['pedra', 'capim'],
       sched: [[7, [6, 12]], [18, [16, 12]], [21, null]],
       lines: [
-        ['Opa! Você é neto do Benedito? Tem a cara dele! Seja bem-vindo à serra.', 'O armazém compra tudo que você trouxer. Pago pouco, mas pago na hora!', 'Semente boa eu tenho. Só não planta milho na seca, hein.'],
+        ['Opa! Você é da família do Benedito? Tem a cara dele! Que bom ter você na serra.', 'O armazém compra tudo que você trouxer. Pago pouco, mas pago na hora!', 'Semente boa eu tenho. Só não planta milho na seca, hein.'],
         ['Seu avô vendia o melhor café da região aqui no balcão.', 'Na feira de sábado você ganha mais que aqui. Mas aqui é garantido.', 'Esse vilarejo já teve até cinema, sabia?'],
         ['Você trouxe vida nova pra serra. O Benedito estaria orgulhoso.', 'Quando a estação reabrir, vou encomendar mercadoria da capital de novo!'],
       ],
@@ -240,7 +319,7 @@
     },
     marta: {
       name: 'Professora Marta', role: 'Professora',
-      look: { skin: '#efc39b', hair: '#6b4a2a', shirt: '#4a8a5a', pants: '#3a3a52', dress: '#4a8a5a', long: true },
+      look: { skin: '#efc39b', hair: '#6b4a2a', shirt: '#4a8a5a', pants: '#3a3a52', dress: '#4a8a5a', long: true, glasses: true },
       loves: ['laranja', 'doce_jabuticaba'], likes: ['jabuticaba', 'mel', 'pamonha'], dislikes: ['pedra', 'cachaca'],
       sched: [[8, [7, 22]], [12, [23, 9]], [17, [18, 21]], [20, null]],
       lines: [
@@ -255,7 +334,7 @@
       loves: ['rapadura', 'pamonha'], likes: ['cana', 'cafe_torrado', 'melado'], dislikes: ['pedra'],
       sched: [[7, [17, 21]], [15, [24, 12]], [19, null]],
       lines: [
-        ['Hmm... neto do Benedito. Ele moía cana comigo no engenho, sabia?', 'Rapadura boa é paciência e fogo certo.', 'A receita da Rapadura da Serra a gente não conta pra qualquer um.'],
+        ['Hmm... família do Benedito. Ele moía cana comigo no engenho, sabia?', 'Rapadura boa é paciência e fogo certo.', 'A receita da Rapadura da Serra a gente não conta pra qualquer um.'],
         ['Você tem mão boa pra terra. Igual seu avô.', 'Quando a cana dá o ponto, o tacho canta. É assim que se sabe.'],
         ['Tá na hora de alguém guardar a receita depois de nós...'],
       ],
@@ -271,6 +350,18 @@
         ['Você é praticamente da família. Vem tomar um café qualquer dia.'],
       ],
     },
+  };
+
+  SE.NPCS.bastiao = {
+    name: 'Seu Bastião', role: 'Ferreiro',
+    look: { skin: '#6b4430', hair: '#2a1a12', shirt: '#7a7a82', pants: '#3a3a42', apron: '#6a4a2a', beard: true },
+    loves: ['barra_ouro', 'ametista'], likes: ['cafe_torrado', 'barra_ferro', 'quartzo', 'pao_queijo'], dislikes: ['capim', 'lata'],
+    sched: [[8, [12, 12]], [19, [34, 12]], [23, null]],
+    lines: [
+      ['Bastião, ferreiro. Se trouxer barra de metal, eu deixo sua ferramenta tinindo.', 'A gruta lá no alto do seu sítio tem minério bom. Cobre por cima, ferro e ouro lá no fundo.', 'Ferro se bate quente. Gente também: tem que acolher enquanto tá chegando.'],
+      ['Seu avô me trazia as enxadas pra amolar todo começo de águas.', 'Leva um facão quando descer a gruta. As lesmas não são de brincadeira.'],
+      ['Nunca vi alguém tão dedicado. Vou caprichar ainda mais nas suas ferramentas.'],
+    ],
   };
 
   // ---------------------------------------------------------------- Jornal
@@ -297,7 +388,10 @@
     { t: 'Monte a barraca na feira de sábado, na praça', ok: (s) => s.stats.feiras >= 1 },
     { t: 'Compre um animal no armazém (aba Animais)', ok: (s) => s.animals.length >= 1 },
     { t: 'Faça um produto artesanal no fogão a lenha', ok: (s) => s.stats.artesanal >= 1 },
+    { t: 'Pesque um peixe no rio com a vara do Zé (veja o correio)', ok: (s) => (s.stats.peixes || 0) >= 1 },
+    { t: 'Desça até o andar 5 da gruta no alto do sítio', ok: (s) => (s.mine && s.mine.deepest >= 5) },
     { t: 'Restaure o engenho de cana (aba Obras do armazém)', ok: (s) => s.stations.engenho.ok },
+    { t: 'Melhore uma ferramenta na ferraria do Seu Bastião', ok: (s) => !!(s.tools && Object.keys(s.tools).some((k) => s.tools[k] > 0)) },
     { t: 'Ajude a reformar a praça (mural da praça)', ok: (s) => !!s.projDone.praca },
     { t: 'Ajude a reabrir a escola', ok: (s) => !!s.projDone.escola },
     { t: 'Traga o trem de volta: reabra a estação', ok: (s) => !!s.projDone.estacao },
@@ -306,6 +400,6 @@
   // Itens que podem ser vendidos
   SE.isSellable = (id) => {
     const it = SE.ITEMS[id];
-    return it && it.cat !== 'tool' && it.price > 0;
+    return it && it.cat !== 'tool' && it.cat !== 'weapon' && it.price > 0;
   };
 })(window.SE);

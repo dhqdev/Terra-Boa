@@ -3,7 +3,7 @@
 (function (SE) {
   const W = SE.W, H = SE.H, I = SE.input, ui = SE.ui;
   const MAX_SLOTS = 6;
-  const FEIRA_CATS = { crop: 1, animal: 1, forage: 1, artisan: 1 };
+  const FEIRA_CATS = { crop: 1, animal: 1, forage: 1, artisan: 1, fish: 1 };
 
   function priceMood(p, ref) {
     const r = p / ref;
@@ -262,15 +262,15 @@
         // céu, igreja e praça
         SE.drawPanorama(c, 0, 0, W, 60, ep, s.time, 0, { t });
         for (let y = 56; y < H; y += 16) for (let x = 0; x < W; x += 16) c.drawImage(tiles.cobble[(x / 16 + y / 16) & 1], x, y);
-        c.drawImage(SE.buildingSprite('igreja', 6, 4, 22), W / 2 - 48, -10);
-        c.drawImage(SE.objSprite('I', ep, 0), 10, 30, 48, 66); c.drawImage(SE.objSprite('I', ep, 1), W - 58, 30, 48, 66);
-        c.drawImage(SE.buildingSprite('barraca', 2, 1, 14, '#27ae60'), 4, 92, 64, 60);
-        c.drawImage(SE.buildingSprite('barraca', 2, 1, 14, '#2e86c1'), W - 68, 92, 64, 60);
+        SE.blit(c, SE.buildingSprite('igreja', 6, 4, 22), W / 2 - 48, -10);
+        SE.blit(c, SE.objSprite('I', ep, 0), 10, 30); SE.blit(c, SE.objSprite('I', ep, 1), W - 58, 30);
+        SE.blit(c, SE.buildingSprite('barraca', 2, 1, 14, '#27ae60'), 4, 92, 2);
+        SE.blit(c, SE.buildingSprite('barraca', 2, 1, 14, '#2e86c1'), W - 68, 92, 2);
         // barraca do jogador
         const bx = 88, bw = 208;
         SE.px.R(c, bx + 2, 74, 4, 70, '#6b4a2a'); SE.px.R(c, bx + bw - 6, 74, 4, 70, '#6b4a2a');
         for (let x = bx; x < bx + bw; x += 8) { SE.px.R(c, x, 66, 8, 12, (x / 8) % 2 ? '#ffffff' : '#c0392b'); SE.px.R(c, x + 2, 78, 4, 3, (x / 8) % 2 ? '#ffffff' : '#c0392b'); }
-        c.drawImage(SE.personSprite(SE.LOOKS[s.look], 0, 0), W / 2 - 16, 84, 32, 48);
+        SE.drawPerson(c, SE.LOOKS[s.look], 0, 0, W / 2, 132, 1.5);
         SE.px.R(c, bx, 120, bw, 22, '#a07848'); SE.px.R(c, bx, 120, bw, 3, '#c49a6a'); SE.px.R(c, bx, 140, bw, 2, '#6b4a2a');
         SE.px.R(c, bx + 4, 142, 3, 18, '#6b4a2a'); SE.px.R(c, bx + bw - 7, 142, 3, 18, '#6b4a2a');
         stall.forEach((sl, i) => {
@@ -286,7 +286,7 @@
         // fregueses
         customers.slice().sort((a, b) => a.y - b.y).forEach((cu) => {
           const fr = cu.st === 'in' || cu.st === 'out' ? (Math.floor(cu.t * 6) % 2) + 1 : 0;
-          c.drawImage(SE.personSprite(cu.look, cu.dir, fr), Math.round(cu.x - 16), Math.round(cu.y - 48), 32, 48);
+          SE.drawPerson(c, cu.look, cu.dir, fr, Math.round(cu.x), Math.round(cu.y), 1.5);
           if (cu.st === 'think') { ui.text(c, '...', cu.x, cu.y - 60, { align: 'center', col: '#ffffff', shadow: '#000' }); }
           if (cu.bubble) {
             c.font = ui.font(10);
