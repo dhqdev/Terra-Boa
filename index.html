@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#1a120c">
+  <meta name="description" content="Sítio Esperança: jogo de fazenda em pixel art 16 bits ambientado no interior do Brasil.">
+  <title>Sítio Esperança</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="game" aria-label="Sítio Esperança"></canvas>
+
+  <div id="touch" hidden>
+    <div class="dpad">
+      <button data-k="up" class="up" aria-label="Cima">▲</button>
+      <button data-k="left" class="left" aria-label="Esquerda">◀</button>
+      <button data-k="right" class="right" aria-label="Direita">▶</button>
+      <button data-k="down" class="down" aria-label="Baixo">▼</button>
+    </div>
+    <div class="acts">
+      <button data-k="a" class="a">A</button>
+      <button data-k="b" class="b">B</button>
+      <button data-k="inv" class="small inv">Bolsa</button>
+      <button data-k="next" class="small nx">Item ›</button>
+    </div>
+  </div>
+
+  <noscript>Ative o JavaScript para jogar Sítio Esperança.</noscript>
+
+  <script src="js/util.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/sprites.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/feira.js"></script>
+  <script src="js/scenes.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

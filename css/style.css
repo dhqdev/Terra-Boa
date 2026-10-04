@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "VT323";
+  src: url("../fonts/VT323-latin.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("../fonts/PressStart2P-latin.woff2") format("woff2");
+  font-display: swap;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; overflow: hidden;
+  background: #1a120c;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+}
+body { display: flex; align-items: center; justify-content: center; }
+#game {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  box-shadow: 0 0 0 2px #3a2412, 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+noscript { color: #f4e4bc; font-family: monospace; }
+
+#touch { position: fixed; inset: 0; pointer-events: none; font-family: "VT323", monospace; }
+#touch button {
+  pointer-events: auto;
+  position: absolute;
+  border: 2px solid #3a2412;
+  background: rgba(244, 228, 188, 0.55);
+  color: #3a2412;
+  font: 20px "VT323", monospace;
+  border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+#touch button.on { background: rgba(242, 201, 76, 0.85); }
+.dpad { position: absolute; left: 14px; bottom: 14px; width: 138px; height: 138px; }
+.dpad button { width: 46px; height: 46px; }
+.dpad .up { left: 46px; top: 0; }
+.dpad .down { left: 46px; bottom: 0; }
+.dpad .left { left: 0; top: 46px; }
+.dpad .right { right: 0; top: 46px; }
+.acts { position: absolute; right: 14px; bottom: 14px; width: 150px; height: 138px; }
+.acts .a { right: 0; bottom: 40px; width: 62px; height: 62px; border-radius: 50%; font-size: 26px; }
+.acts .b { right: 72px; bottom: 6px; width: 50px; height: 50px; border-radius: 50%; }
+.acts .small { width: 64px; height: 30px; font-size: 18px; }
+.acts .inv { right: 76px; top: 0; }
+.acts .nx { right: 0; top: 0; }
